@@ -11,7 +11,10 @@
     
         <meta charset="UTF-8" />
         <title>Conduit</title>
-        
+		
+		<script type="text/javascript" src="resources/js/require.2.3.6.js"></script>
+		<script type="text/javascript" src="resources/js/ui.js"></script>
+
         <!--<link rel="stylesheet" href="/resources/css/index.css" />-->
         <!--<link rel="shortcut icon" href="/resources/gfx/jiraf.png" type="image/x-icon">-->
     </head>
@@ -33,7 +36,10 @@
 	    		<a href="/login">login</a>
 	    	</c:otherwise>
     	</c:choose>
-    	
-    	<script src="/resources/js/index.js"></script>
+		
+		<!-- TODO: replace it with a TS module for this page -->
+		<script src="/resources/js/index.js"></script>
+		
+		<script>loadContext (["index"]);</script>
     </body>
 </html>
