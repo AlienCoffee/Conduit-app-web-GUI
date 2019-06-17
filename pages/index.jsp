@@ -10,10 +10,30 @@
 		<meta name="_csrf_header" content="${_csrf.headerName}"/>
     
         <meta charset="UTF-8" />
-        <title>Index page</title>
+        <title>Conduit</title>
+        
+        <!--<link rel="stylesheet" href="/resources/css/index.css" />-->
+        <!--<link rel="shortcut icon" href="/resources/gfx/jiraf.png" type="image/x-icon">-->
     </head>
     
     <body>
-    	<!-- here is nothing -->
+    	<h2>Index</h2>
+    	<c:choose>
+	    	<c:when test="${user != null}">
+	    		<p>Hello: ${user.getLogin ()}</p>
+				
+	    		<button id="logout">logout</button>,
+	    		<c:if test="${user.getIsAdmin ()}">
+	    			<a href="/admin">admin</a>,
+	    		</c:if>
+	    		<a href="/periods">periods</a>
+	    	</c:when>
+	    	
+	    	<c:otherwise>
+	    		<a href="/login">login</a>
+	    	</c:otherwise>
+    	</c:choose>
+    	
+    	<script src="/resources/js/index.js"></script>
     </body>
 </html>
