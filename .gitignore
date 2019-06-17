@@ -1,2 +1,8 @@
 /.project
 /local deploy.cmd
+/node_modules/
+
+/package-lock.json
+
+/resources/ts/*.js
+/resources/ts/*.js.map
