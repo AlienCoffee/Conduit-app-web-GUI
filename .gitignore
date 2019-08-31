@@ -1,6 +1,7 @@
 /.project
 /local deploy.cmd
 /node_modules/
+/resources/ts/bridge
 
 /package-lock.json
 
