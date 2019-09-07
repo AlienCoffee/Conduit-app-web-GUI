@@ -1,6 +1,37 @@
-import { ErrorPopupTile } from "./popup";
+//
+// (c) Shemplo
+//
 
+export function sendRequest <T> (method : string, url : string, data : FormData) : Promise <T> {
+    return new Promise <T> ((res, rej) => {
+        var descriptor = new XMLHttpRequest ();
 
+        descriptor.onreadystatechange = function () {
+            if (descriptor.readyState != 4) { return; }
+
+            if (descriptor.status >= 200 && descriptor.status < 300) {
+                var text = descriptor.responseText;
+                if (text && (text.startsWith ("{") || text.startsWith ("["))) {
+                    res (JSON.parse (descriptor.responseText) as T);
+                } else {
+                    var message = "Server returned answer that can't be parsed" 
+                                + " (see console for details)";
+                    console.log (text);
+                    rej (message);
+                }
+            } else {
+                var message = "Some error occured during connection to server (code " 
+                            + descriptor.status + ")";
+                rej (message);
+            }
+        };
+
+        descriptor.open (method, url, true);
+        descriptor.send (data);
+    });
+}
+
+/*
 export class Request {
 
     constructor (
@@ -98,3 +129,4 @@ export class PostRequestWithFiles extends PostRequest {
     }
 
 }
+*/

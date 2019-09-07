@@ -10,4 +10,18 @@
 body {
     max-width: 1500px;
     margin: 0 auto;
+
+    background-color: whitesmoke;
+}
+
+.popup-layer {
+    position: absolute;
+    right   : 0;
+    top     : 0;
+    bottom  : 0;
+    width   : 25%;
+    z-index : 100;
+    
+    overflow-y : auto;
+    padding-top: 5em;
 }

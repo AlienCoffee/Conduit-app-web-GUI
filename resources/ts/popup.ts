@@ -1,27 +1,34 @@
+//
+// (c) Shemplo
+//
+
 import { element } from './common'
 
 export class PopupTile {
 
     protected tile    : HTMLDivElement;
-    protected title   : HTMLHeadingElement;
-    protected message : HTMLParagraphElement;
+    protected title   : HTMLDivElement;
+    protected message : HTMLDivElement;
 
     constructor (
         protected timeout : number,
         title   : string,
-        message : string,
-        style   : string = "popup-info"
+        message : string
     ) {
         this.tile = document.createElement ("div");
-        this.tile.classList.add ("popup-tile", style);
+        this.tile.classList.add ("toast");
     
-        this.title = document.createElement ("h4");
-        this.title.classList.add ("popup-title");
+        this.title = document.createElement ("div");
+        this.title.classList.add ("toast-header");
         this.tile.appendChild (this.title);
-        this.title.innerHTML = title;
+        
+        var strong = document.createElement ("strong");
+        strong.classList.add ("mr-auto", "text-primary");
+        this.title.appendChild (strong);
+        strong.innerHTML = title;
     
-        this.message = document.createElement ("p");
-        this.message.classList.add ("popup-message");
+        this.message = document.createElement ("div");
+        this.message.classList.add ("toast-body");
         this.tile.appendChild (this.message);
         this.message.innerHTML = message;
     }
@@ -58,10 +65,11 @@ export class PopupTile {
     public show () {
         element ("popup").prepend (this.tile);
         this.destructAfter (this.timeout);
+        this.tile.style.opacity = "1";
     }
 
     public destructAfter (timeout : number) {
-        if (timeout > 0 && timeout < 300) { // from 1 to 300 seconds
+        if (timeout > 0 && timeout <= 300) { // from 1 to 300 seconds
             setTimeout (() => this.delete (), timeout * 1000);
         }
     }
@@ -79,8 +87,8 @@ export class ErrorPopupTile extends PopupTile {
         message : string,
         timeout : number
     ) { 
-        var style : string = PopupTile.styles [1];
-        super (timeout, title, message, style); 
+        //var style : string = PopupTile.styles [1];
+        super (timeout, title, message); 
     }
 
 }
