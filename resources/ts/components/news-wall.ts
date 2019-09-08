@@ -1,21 +1,27 @@
 import { LoadingComponent } from "./loading-component";
 import { BlogPost, ResponseBox } from "../bridge/gen-dtos";
+import { GetController } from "../bridge/gen-apis";
 
 
 export class NewsWall extends LoadingComponent <ResponseBox <Array <BlogPost>>> {
 
     constructor (
-        updateInterval : number
+        updateInterval : number = null,
+        spinner        : HTMLDivElement = null
     ) {
-        super (updateInterval);
+        super (updateInterval, spinner);
     }
 
-    public init (): void {
-        
+    public init (): void {}
+
+    public makeRequest () : Promise <ResponseBox <Array <BlogPost>>> {
+        return GetController.getChannelBlogPosts ("main", "");
     }
 
-    public interpretateResponse (response: ResponseBox <Array <BlogPost>>): void {
-        //
+    public handleResponse (response: ResponseBox <Array <BlogPost>>): void {
+        this.checkErrorsAndDo (response, obj => {
+            
+        });
     }
 
 }

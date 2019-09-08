@@ -1,22 +1,15 @@
 import { NewsWall } from "./components/news-wall";
 import { PopupTile } from "./popup";
+import { element } from "./common";
 
 //
 // (c) Shemplo
 //
 
-window.onload = function () {
-    /*
-    setTimeout (() => {
-        var a = new PopupTile (10, "First toast", "Welcome on our platform");
-        a.show ();
-        console.log (a);
+var nw : NewsWall = null;
 
-        setTimeout (() => {
-            var a = new PopupTile (5, "Second toast", "This toast is too small");
-            a.show ();
-            console.log (a);
-        }, 300);
-    }, 1000);
-    */
+window.onload = function () {
+    var spinner = element ("news-wall-spinner") as HTMLDivElement;
+    nw = new NewsWall (-1, spinner);
+    nw.reloadData ();
 }

@@ -31,7 +31,10 @@
                     <div class="d-flex justify-content-start align-items-center mt-4 ml-1">
                         <h2>Recent news</h2>
     
-                        <div class="spinner-grow text-primary ml-2"></div>
+						<div class="spinner-grow text-primary ml-2" 
+							id="news-wall-spinner">
+
+						</div>
                     </div>
                     <div>
                         <!--

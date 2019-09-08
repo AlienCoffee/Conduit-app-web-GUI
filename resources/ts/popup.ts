@@ -13,7 +13,8 @@ export class PopupTile {
     constructor (
         protected timeout : number,
         title   : string,
-        message : string
+        message : string,
+        style   : string
     ) {
         this.tile = document.createElement ("div");
         this.tile.classList.add ("toast");
@@ -23,7 +24,7 @@ export class PopupTile {
         this.tile.appendChild (this.title);
         
         var strong = document.createElement ("strong");
-        strong.classList.add ("mr-auto", "text-primary");
+        strong.classList.add ("mr-auto", style);
         this.title.appendChild (strong);
         strong.innerHTML = title;
     
@@ -43,7 +44,7 @@ export class PopupTile {
         return this;
     }
 
-    protected static styles = ["popup-info", "popup-error"];
+    protected static styles = ["text-info", "text-success", "text-warning", "text-danger"];
 
     public changeStyle (style : string) : PopupTile {
         PopupTile.styles.forEach (st => this.tile.classList.remove (st));
@@ -53,12 +54,12 @@ export class PopupTile {
     }
 
     public switchToInfo () : PopupTile { 
-        this.changeStyle (PopupTile.styles [1]); 
+        this.changeStyle (PopupTile.styles [0]); 
         return this;
     }
 
     public switchToError () : PopupTile { 
-        this.changeStyle (PopupTile.styles [2]); 
+        this.changeStyle (PopupTile.styles [3]); 
         return this;
     }
 
@@ -83,12 +84,12 @@ export class PopupTile {
 export class ErrorPopupTile extends PopupTile {
 
     constructor (
+        timeout : number,
         title   : string,
-        message : string,
-        timeout : number
+        message : string
     ) { 
-        //var style : string = PopupTile.styles [1];
-        super (timeout, title, message); 
+        var style : string = PopupTile.styles [3];
+        super (timeout, title, message, style); 
     }
 
 }

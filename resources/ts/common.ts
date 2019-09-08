@@ -21,10 +21,10 @@ export function clearChildren (element : HTMLElement) : void {
     }
 }
 
-export class Pair <F, S> {
-    public F : F; public S : S;
-}
-
 export function assignType <T> (obj : T, type : any) : T {
     return obj ? Object.setPrototypeOf (obj, type) : obj;
+}
+
+export class Pair <F, S> {
+    public F : F; public S : S;
 }

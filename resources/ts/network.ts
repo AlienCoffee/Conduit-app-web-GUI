@@ -3,9 +3,13 @@
 //
 
 export function sendRequest <T> (method : string, url : string, data : FormData) : Promise <T> {
+    var metas = document.getElementsByTagName ("meta");
+	var token  = metas ["_csrf"].getAttribute ("content");
+	var header = metas ["_csrf_header"].getAttribute ("content");
+
     return new Promise <T> ((res, rej) => {
         var descriptor = new XMLHttpRequest ();
-
+        
         descriptor.onreadystatechange = function () {
             if (descriptor.readyState != 4) { return; }
 
@@ -17,88 +21,49 @@ export function sendRequest <T> (method : string, url : string, data : FormData)
                     var message = "Server returned answer that can't be parsed" 
                                 + " (see console for details)";
                     console.log (text);
-                    rej (message);
+                    //rej (message);
                 }
             } else {
                 var message = "Some error occured during connection to server (code " 
                             + descriptor.status + ")";
-                rej (message);
+                //rej (message);
             }
         };
 
+        descriptor.onerror = function (pe : ProgressEvent) {
+            var error = new NetworkError ("Failed to make request to server", 
+                "Check your internet connection", false);
+            rej (error);
+        }
+        
         descriptor.open (method, url, true);
+        descriptor.setRequestHeader (header, token);
         descriptor.send (data);
     });
 }
 
+export class NetworkError implements Error {
+    
+    name: string = "Network Error";
+
+    message: string;
+    stack?: string;
+
+    constructor (
+        message  : string, 
+        protected comment  : string,
+        protected system : boolean = true
+    ) {
+        this.message = message;
+    }
+
+    public getComment () { return this.comment; }
+
+    public isSystem () { return this.system; }
+
+}
+
 /*
-export class Request {
-
-    constructor (
-        protected method : string,
-        protected url    : string,
-        protected data   : {}
-    ) {};
-
-    public send <T> (handler : (response : T) => void, 
-            fixer? : (response : string) => boolean) : void {
-        this.sendRequest (this.createRequest (handler, fixer));
-    }
-
-    protected sendRequest (descriptor : XMLHttpRequest) {
-        descriptor.setRequestHeader ("Content-Type", "application/json");
-        descriptor.send (JSON.stringify (this.data));
-    }
-
-    protected createRequest <T> (handler : (response : T) => void, 
-            fixer : (response : string) => boolean) : XMLHttpRequest {
-        var descriptor = new XMLHttpRequest ();
-        descriptor.open (this.method, this.url, true);
-        
-        descriptor.onreadystatechange = function () {
-            if (descriptor.readyState != 4) { return; }
-            
-            if (descriptor.status >= 200 && descriptor.status < 300) {
-                var text = descriptor.responseText;
-                if (text && (text.startsWith ("{") || text.startsWith ("["))) {
-                    handler (<T> JSON.parse (descriptor.responseText));
-                } else if (fixer == null || !fixer (text)) {
-                    var message = "Server returned answer that can't be parsed" 
-                                + " (see console for details)";
-                    new ErrorPopupTile ("Failed to parse response", 
-                                        message, 10).show ();
-                    console.log (text);
-                }
-            } else {
-                var message = "Some error occured during connection to server (code " 
-                            + descriptor.status + ")";
-                new ErrorPopupTile ("Request failed", message, 5).show ();
-            }
-        }
-
-        return descriptor;
-    }
-
-}
-
-export class PostRequest extends Request {
-
-    constructor (
-        protected url  : string,
-        protected data : {}
-    ) { super ("POST", url, data); };
-
-}
-
-export class GetRequest extends Request {
-
-    constructor (
-        protected url  : string,
-        protected data : {}
-    ) { super ("GET", url, data); };
-
-}
-
 export class PostRequestWithFiles extends PostRequest {
 
     constructor (
