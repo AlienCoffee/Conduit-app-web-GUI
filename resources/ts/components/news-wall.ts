@@ -20,8 +20,13 @@ export class NewsWall extends LoadingComponent <ResponseBox <Array <BlogPost>>> 
 
     public handleResponse (response: ResponseBox <Array <BlogPost>>): void {
         this.checkErrorsAndDo (response, obj => {
-            
+            // render news
         });
+    }
+
+    // this method will be responsible for `heart` button
+    public toggleLike () {
+
     }
 
 }

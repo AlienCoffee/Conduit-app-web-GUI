@@ -3,7 +3,6 @@ import { NetworkError } from "../network";
 import { PopupTile, ErrorPopupTile } from "../popup";
 import { ResponseBox } from "../bridge/gen-dtos";
 
-
 export abstract class LoadingComponent <T> extends AbstractComponent {
 
     protected intervalDesc : number = null

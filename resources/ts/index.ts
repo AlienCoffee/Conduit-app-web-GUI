@@ -6,7 +6,7 @@ import { element } from "./common";
 // (c) Shemplo
 //
 
-var nw : NewsWall = null;
+export var nw : NewsWall = null;
 
 window.onload = function () {
     var spinner = element ("news-wall-spinner") as HTMLDivElement;

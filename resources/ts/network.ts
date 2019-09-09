@@ -18,20 +18,22 @@ export function sendRequest <T> (method : string, url : string, data : FormData)
                 if (text && (text.startsWith ("{") || text.startsWith ("["))) {
                     res (JSON.parse (descriptor.responseText) as T);
                 } else {
-                    var message = "Server returned answer that can't be parsed" 
-                                + " (see console for details)";
-                    console.log (text);
-                    //rej (message);
+                    let title = "Failed to parse server response";
+                    rej (new NetworkError (title, text));
                 }
             } else {
-                var message = "Some error occured during connection to server (code " 
-                            + descriptor.status + ")";
-                //rej (message);
+                let code = descriptor.status;
+
+                let message = "Response code: " + code + ". If you don't know " 
+                            + " how to fix this problem, call for moderators";
+                let title = "Request to server failed";
+
+                rej (new NetworkError (title, message, code < 500));
             }
         };
 
         descriptor.onerror = function (pe : ProgressEvent) {
-            var error = new NetworkError ("Failed to make request to server", 
+            let error = new NetworkError ("Failed to make request to server", 
                 "Check your internet connection", false);
             rej (error);
         }
