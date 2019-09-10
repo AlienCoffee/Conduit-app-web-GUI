@@ -6,10 +6,15 @@ import { element } from "./common";
 // (c) Shemplo
 //
 
-export var nw : NewsWall = null;
+export let nwd  : HTMLDivElement; // news wall div
+export let nwnd : HTMLDivElement; // news wall nothing div
+export let nw   : NewsWall;
 
 window.onload = function () {
-    var spinner = element ("news-wall-spinner") as HTMLDivElement;
-    nw = new NewsWall (-1, spinner);
+    nwnd = element ("news-wall-nothing") as HTMLDivElement;
+    nwd = element ("news-wall") as HTMLDivElement;
+
+    let spinner = element ("news-wall-spinner") as HTMLDivElement;
+    nw = new NewsWall (-1, spinner, nwd, nwnd);
     nw.reloadData ();
 }

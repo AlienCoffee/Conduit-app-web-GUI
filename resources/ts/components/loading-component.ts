@@ -44,8 +44,11 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
             callback : (content : CT) => void) {
         if (response && !response.error) {
             callback (response.object);
-        } else if (response) {
-            // show pop-up
+        } else if (response && response.error) {
+            let message = response.message ? response.message 
+                        : "(Message is not available)";
+            new ErrorPopupTile (5, "Error occured", message)
+              . show ();
         }
     }
 

@@ -36,11 +36,11 @@
 
 						</div>
                     </div>
-                    <div>
+					<div class="text-left p-2" id="news-wall-nothing">
+						<span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
+					</div>
+                    <div id="news-wall">
                         <!--
-	                    <div class="text-left p-2">
-	                        <span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
-	                    </div>
 	                    <div class="row p-3">
 	                        <div class="d-flex">
 	                            <div class="col mr-3">

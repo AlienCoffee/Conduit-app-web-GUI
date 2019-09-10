@@ -3,7 +3,7 @@
 echo Copying files to %1%
 
 echo ~~ PAGES files ~~
-set pages_path=%1%\src\main\webapp\WEB-INF\jsp
+set pages_path=%1%\src\main\webapp\WEB-INF
 rmdir %pages_path% /s/q
 mkdir %pages_path%
 ::xcopy "pages" %pages_path% /s/h/e/k/f/c/y
