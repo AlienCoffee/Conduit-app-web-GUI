@@ -8,6 +8,9 @@
     
     <div class="row px-1 py-2">
         <div class="col">
+			<input type="hidden" value="${user != null && user.getId () > 0}"
+				id="user-profile-authorized" />
+
             <c:choose>
             	<c:when test="${user != null && user.getId () > 0}">
             		<h4>Welcome, <code>${user.getLogin ()}</code></h4>
@@ -40,7 +43,8 @@
 			        </ul>
         
             		<div class="d-flex">
-	                    <button class="btn btn-sm btn-outline-secondary">
+						<button class="btn btn-sm btn-outline-secondary"
+								id="user-profile-logout-button">
 	                        Log out
 	                    </button>
 	                </div>
@@ -55,7 +59,8 @@
 		                    <div class="input-group-prepend">
 		                        <span class="input-group-text">@</span>
 		                    </div>
-		                    <input type="text" class="form-control" 
+							<input type="text" class="form-control"
+								id="user-profile-login-field" 
 		                        placeholder="Username">
 		                </div>
 		                <div class="input-group input-group-sm mb-3">
@@ -64,15 +69,17 @@
 		                            <span class="fas fa-key"></span>
 		                        </span>
 		                    </div>
-		                    <input type="password" class="form-control" 
+							<input type="password" class="form-control"
+								id="user-profile-password-field" 
 		                        placeholder="Password">
 		                </div>
 		
 		                <div class="d-flex justify-content-end">
-		                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+							<a class="btn btn-sm btn-outline-secondary" href="/registration">
 		                        Register
-		                    </button>
-		                    <button type="submit" class="btn btn-sm btn-primary ml-2">
+							</a>
+							<button class="btn btn-sm btn-primary ml-2"
+									id="user-profile-login-button">
 		                        Login
 		                    </button>
 		                </div>

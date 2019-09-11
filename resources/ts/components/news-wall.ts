@@ -1,25 +1,35 @@
 import { LoadingComponent } from "./loading-component";
 import { BlogPost, ResponseBox } from "../bridge/gen-dtos";
 import { GetController } from "../bridge/gen-apis";
-import { compareDates } from "../common";
+import { compareDates, element } from "../common";
 import { makeBlogPostElement } from "../bridge/gen-htmls";
 
 export class NewsWall extends LoadingComponent <ResponseBox <BlogPost []>> {
 
     private posts : BlogPost [] = [];
 
+    protected div            : HTMLDivElement;
+    protected noDiv          : HTMLDivElement;
+    protected loadMore       : HTMLUListElement;
+    protected loadMoreButton : HTMLButtonElement;
+
     constructor (
         protected updateInterval : number = null,
-        protected spinner        : HTMLDivElement = null,
-        protected div            : HTMLDivElement,
-        protected noDiv          : HTMLDivElement,
-        protected loadMore       : HTMLUListElement,
-        protected loadMoreButton : HTMLButtonElement
+        protected spinner        : HTMLDivElement = null
     ) {
         super (updateInterval, spinner);
     }
 
-    public init (): void {}
+    public init (): void {
+        this.loadMoreButton = element ("news-wall-more-button");
+        this.loadMoreButton.onclick = () => this.loadMorePosts ();
+
+        this.noDiv    = element ("news-wall-nothing");
+        this.loadMore = element ("news-wall-more");
+        this.div      = element ("news-wall");
+
+        this.reloadData ();
+    }
 
     public makeRequest () : Promise <ResponseBox <BlogPost []>> {
         return GetController.getMainBlogPosts (null);
@@ -75,8 +85,12 @@ export class NewsWall extends LoadingComponent <ResponseBox <BlogPost []>> {
         }
     }
 
+    private loadMorePosts () : void {
+
+    }
+
     // this method will be responsible for `heart` button
-    public toggleLike () {
+    private toggleLike () {
 
     }
 

@@ -2,16 +2,16 @@
 // (c) Shemplo
 //
 
-export function element (id : string) : HTMLElement {
-    return document.getElementById (id);
+export function element <T extends HTMLElement> (id : string) : T {
+    return document.getElementById (id) as T;
 }
 
 export function dataElement (id : string) : HTMLDataElement {
     return element (id) as HTMLDataElement;
 }
 
-export function inputElement (id : string) : HTMLInputElement {
-    return element (id) as HTMLInputElement;
+export function inputElement <T extends HTMLInputElement> (id : string) : T {
+    return element (id) as T;
 }
 
 export function clearChildren (element : HTMLElement) : void {
