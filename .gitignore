@@ -5,5 +5,6 @@
 
 /package-lock.json
 
+/resources/lib/
 /resources/ts/**/*.js
 /resources/ts/**/*.js.map

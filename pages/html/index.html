@@ -28,16 +28,19 @@
                             <ul class="nav flex-column">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/">
+                                        <i class="fas fa-newspaper mr-2" aria-hidden="true"></i>
                                         News page
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/periods.html">
+                                        <i class="fas fa-list mr-2" aria-hidden="true"></i>
                                         Periods
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/about.html">
+                                        <i class="fas fa-at mr-2" aria-hidden="true"></i>
                                         About
                                     </a>
                                 </li>
@@ -47,10 +50,6 @@
                     <div class="row px-1 py-2">
                         <div class="col">
                             <h4>Profile</h4>
-                            <div class="text-left px-3 py-1">
-                                <div class="spinner-border spinner-border-sm mr-2"></div>
-                                <span>Loading...</span>
-                            </div>
                             <p class="pl-3 py-1">Login or register on site to continue work</p>
                             <form class="pl-3">
                                 <div class="input-group input-group-sm mb-3">
@@ -111,10 +110,10 @@
                     </div>
                 </div>
                 <div class="col-9">
-                    <h2>Recent news</h2>
-                    <div class="text-left p-2">
-                        <div class="spinner-border spinner-border-sm mr-2"></div>
-                        <span>Loading...</span>
+                    <div class="d-flex justify-content-start align-items-center mt-4 ml-1">
+                        <h2>Recent news</h2>
+    
+                        <div class="spinner-grow text-primary ml-2"></div>
                     </div>
                     <div class="text-left p-2">
                         <span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
@@ -222,7 +221,7 @@
 
         <script>
             $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip(); 
+                $('[data-toggle="tooltip"]').tooltip(); 
             });
         </script>
     </body>

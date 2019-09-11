@@ -15,13 +15,17 @@ body {
 }
 
 .popup-layer {
-    position: absolute;
+    position: fixed;
     right   : 0;
     top     : 0;
-    bottom  : 0;
+    /*bottom  : 0;*/
     width   : 25%;
     z-index : 100;
     
     overflow-y : auto;
     padding-top: 5em;
+}
+
+.logo-image {
+    width: 32px;
 }

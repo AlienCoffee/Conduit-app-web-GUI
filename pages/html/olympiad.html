@@ -29,16 +29,19 @@
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="nav-link" href="/">
+                                    <i class="fas fa-newspaper mr-2" aria-hidden="true"></i>
                                     News page
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/periods.html">
+                                    <i class="fas fa-list mr-2" aria-hidden="true"></i>
                                     Periods
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/about.hhtml">
+                                <a class="nav-link" href="/about.html">
+                                    <i class="fas fa-at mr-2" aria-hidden="true"></i>
                                     About
                                 </a>
                             </li>
@@ -48,10 +51,6 @@
                 <div class="row px-1 py-2">
                     <div class="col">
                         <h4>Profile</h4>
-                        <div class="text-left px-3 py-1">
-                            <div class="spinner-border spinner-border-sm mr-2"></div>
-                            <span>Loading...</span>
-                        </div>
                         <p class="pl-3 py-1">Login or register on site to continue work</p>
                         <form class="pl-3">
                             <div class="input-group input-group-sm mb-3">
@@ -113,22 +112,32 @@
                 </div>
             </div>
             <div class="col-9">
-                <h2>Olympiad #3</h2>
+                <h2>Olympiad</h2>
 
                 <div class="text-secondary">
-                    <span class="fas fa-calendar mx-1" aria-hidden="true"></span>
+                    <span class="fas fa-calendar-day" aria-hidden="true"></span>
+                    <small class="mr-3">
+                        23.03.2019 19:28
+                    </small>
+
+                    <span class="fas fa-user" aria-hidden="true"></span>
+                    <small class="mr-3">
+                        Shemplo
+                    </small>
+
+                    <span class="fas fa-calendar-week" aria-hidden="true"></span>
                     <small class="mr-3">
                         28.07.2019 - 14.09.2020
                     </small>
 
-                    <span class="fas fa-book mx-1" aria-hidden="true"></span>
+                    <span class="fas fa-users" aria-hidden="true"></span>
                     <small class="mr-3">
-                        registration
+                        <span>316</span> participants
                     </small>
 
-                    <span class="fas fa-user mx-1" aria-hidden="true"></span>
+                    <span class="fas fa-book" aria-hidden="true"></span>
                     <small class="mr-3">
-                        Shemplo
+                        Online
                     </small>
                 </div>
 
@@ -139,163 +148,286 @@
                     vitae arcu luctus, eget maximus lorem vulputate.
                 </p>
 
-                <h4 class="mt-4">
-                    Olympiad problems
-                </h4>
+                <div class="container d-flex justify-content-start align-items-center mt-4">
+                    <h4>Your attempts</h4>
 
-                <div class="text-left p-2">
-                    <div class="spinner-border spinner-border-sm mr-2"></div>
-                    <span>Loading...</span>
+                    <div class="spinner-grow text-primary ml-2"></div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-9">
+                        <div class="text-left p-2">
+                            <span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-action">
+                                <div class="text-secondary mb-1">
+                                    <span class="fas fa-calendar-day" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        31.07.2019 34:20
+                                    </small>
+
+                                    <span class="fas fa-book" aria-hidden="true"></span>
+                                    <small class="mr-3 text-success">
+                                        Checked
+                                    </small>
+
+                                    <span class="fas fa-trophy" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        <span>32</span> points
+                                    </small>
+                                </div>
+                                
+                                <div class="table-responsive mt-2">
+                                    <table class="table table-sm">
+                                        <thead class="thead-light">
+                                            <tr class="">
+                                                <th>Problem</th>
+                                                <th>1</th>
+                                                <th>2</th>
+                                                <th>3</th>
+                                                <th>4</th>
+                                                <th>5</th>
+                                                <th>6</th>
+                                                <th>7</th>
+                                                <th>8</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Verdict</td>
+                                                <td>5</td>
+                                                <td>3</td>
+                                                <td>7</td>
+                                                <td>7</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>2</td>
+                                                <td>0</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </li>
+                            <li class="list-group-item list-group-item-action">
+                                <div class="text-secondary mb-1">
+                                    <span class="fas fa-calendar-day" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        31.07.2019 34:20
+                                    </small>
+
+                                    <span class="fas fa-book" aria-hidden="true"></span>
+                                    <small class="mr-3 text-warning">
+                                        Pending
+                                    </small>
+
+                                    <span class="fas fa-trophy" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        <span>0</span> points
+                                    </small>
+                                </div>
+                            </li>
+                            <li class="list-group-item list-group-item-action">
+                                <div class="text-secondary mb-1">
+                                    <span class="fas fa-calendar-day" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        31.07.2019 34:20
+                                    </small>
+
+                                    <span class="fas fa-book" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        <span class="text-danger">Canceled</span>
+                                        <span>
+                                            (new attempt sent)
+                                        </span>
+                                    </small>
+
+                                    <span class="fas fa-trophy" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        <span>0</span> points
+                                    </small>
+                                </div>
+                            </li>
+                            <li class="list-group-item list-group-item-action">
+                                <div class="text-secondary mb-1">
+                                    <span class="fas fa-calendar-day" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        31.07.2019 34:20
+                                    </small>
+
+                                    <span class="fas fa-book" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        <span class="text-danger">Canceled</span>
+                                        <span>
+                                            (new attempt sent)
+                                        </span>
+                                    </small>
+
+                                    <span class="fas fa-trophy" aria-hidden="true"></span>
+                                    <small class="mr-3">
+                                        <span>0</span> points
+                                    </small>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="container mt-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5>Upload attempt</h5>
+
+                                <div class="text-info">
+                                    <span>2</span>
+                                    attempts left
+                                </div>
+                            </div>
+
+                            <div class="input-group mt-2">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="attemptInput">
+                                    <label class="custom-file-label" for="attemptInput">
+                                        Choose <b>.zip</b> archive
+                                    </label>
+                                </div>
+                                
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary">
+                                        <span class="fas fa-upload" aria-hidden="true"></span>
+                                        <span class="ml-1">Upload</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p class="text-secondary text-sm mt-2 ml-2">
+                                <small>
+                                    Only <b>.zip</b> archives with images <b>(.jpg, .png, .bmp)</b> 
+                                    or text files <b>(.docx, .pdf)</b> can be uploaded
+                                </small>
+                            </p>
+
+                            <p class="text-danger mt-2 ml-2">
+                                <b>Be careful!</b> only the last uploaded attempt will be checked
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-sync mr-2" aria-hidden="true"></i>
+                                Reload attempts list
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container d-flex justify-content-start align-items-center mt-4">
+                    <h4>Olympiad problems</h4>
+
+                    <div class="spinner-grow text-primary ml-2"></div>
                 </div>
 
                 <div class="row mb-5">
-                    <div class="col-8">
+                    <div class="col-9">
                         <div class="text-left p-2">
                             <span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
                         </div>
                         <ul class="list-group">
                             <li class="list-group-item list-group-item-action">
                                 <div class="d-flex justify-content-between">
-                                    <h5>Problem #3</h5>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-primary">
-                                            Join group
-                                        </button>
-                                        <button class="btn btn-sm btn-link">
-                                            <span class="fas fa-info"></span>
-                                        </button>
-                                    </div>
+                                    <h5>Problem #1</h5>
                                 </div>
-                                <div class="text-secondary">
-                                    <span class="fas fa-calendar" aria-hidden="true"></span>
+                                <div class="text-secondary mb-1">
+                                    <span class="fas fa-trophy" aria-hidden="true"></span>
                                     <small class="mr-3">
-                                        31.07.2019
+                                        7 points
                                     </small>
 
-                                    <span class="fas fa-paw" aria-hidden="true"></span>
+                                    <span class="fas fa-dumbbell" aria-hidden="true"></span>
                                     <small class="mr-3">
-                                        study
+                                        0.23
                                     </small>
 
                                     <span class="fas fa-user" aria-hidden="true"></span>
                                     <small class="mr-3">
                                         Shemplo
                                     </small>
-
-                                    <span class="fas fa-users" aria-hidden="true"></span>
-                                    <small class="mr-3">
-                                        <span>23</span> members
-                                    </small>
-
-                                    <span class="fas fa-unlock-alt" aria-hidden="true"></span>
-                                    <small class="mr-3">
-                                        join by application
-                                    </small>
                                 </div>
                                 <p>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-                                    bibendum
-                                    nunc dapibus sagittis. Etiam tincidunt, turpis at pharetra aliquet, metus odio
-                                    convallis
-                                    augue, ac malesuada velit dolor eget lorem. Ut feugiat dignissim tortor. Nam
-                                    sagittis nisl
-                                    vitae arcu luctus, eget maximus lorem vulputate.
-                                </p>
+                                    bibendum nunc dapibus sagittis.</p>
                             </li>
                             <li class="list-group-item list-group-item-action">
                                 <div class="d-flex justify-content-between">
                                     <h5>Problem #2</h5>
-                                    <div>
-                                        <button class="btn btn-sm btn-link">
-                                            <span class="fas fa-info"></span>
-                                        </button>
-                                    </div>
                                 </div>
-                                <div class="text-secondary">
-                                    <span class="fas fa-calendar" aria-hidden="true"></span>
+                                <div class="text-secondary mb-1">
+                                    <span class="fas fa-trophy" aria-hidden="true"></span>
                                     <small class="mr-3">
-                                        30.07.2019
+                                        7 points
                                     </small>
 
-                                    <span class="fas fa-paw" aria-hidden="true"></span>
+                                    <span class="fas fa-dumbbell" aria-hidden="true"></span>
                                     <small class="mr-3">
-                                        study
+                                        0.38
                                     </small>
 
                                     <span class="fas fa-user" aria-hidden="true"></span>
                                     <small class="mr-3">
                                         Shemplo
                                     </small>
-
-                                    <span class="fas fa-users" aria-hidden="true"></span>
-                                    <small class="mr-3">
-                                        <span>21</span> members
-                                    </small>
-
-                                    <span class="fas fa-unlock-alt" aria-hidden="true"></span>
-                                    <small class="mr-3">
-                                        join by invitation
-                                    </small>
                                 </div>
                                 <p>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-                                    bibendum
-                                    nunc dapibus sagittis. Etiam tincidunt, turpis at pharetra aliquet, metus odio
-                                    convallis
-                                    augue, ac malesuada velit dolor eget lorem. Ut feugiat dignissim tortor. Nam
-                                    sagittis nisl
-                                    vitae arcu luctus, eget maximus lorem vulputate.
-                                </p>
+                                    bibendum nunc dapibus sagittis.</p>
                             </li>
                             <li class="list-group-item list-group-item-action">
                                 <div class="d-flex justify-content-between">
-                                    <h5>Problem #1</h5>
-                                    <div>
-                                        <button class="btn btn-sm btn-link">
-                                            <span class="fas fa-info"></span>
-                                        </button>
-                                    </div>
+                                    <h5>Problem #3</h5>
                                 </div>
-                                <div class="text-secondary">
-                                    <span class="fas fa-calendar" aria-hidden="true"></span>
+                                <div class="text-secondary mb-1">
+                                    <span class="fas fa-trophy" aria-hidden="true"></span>
                                     <small class="mr-3">
-                                        29.07.2019
+                                        7 points
                                     </small>
 
-                                    <span class="fas fa-paw" aria-hidden="true"></span>
+                                    <span class="fas fa-dumbbell" aria-hidden="true"></span>
                                     <small class="mr-3">
-                                        elimination
+                                        0.69
                                     </small>
 
                                     <span class="fas fa-user" aria-hidden="true"></span>
                                     <small class="mr-3">
                                         Shemplo
                                     </small>
-
-                                    <span class="fas fa-users" aria-hidden="true"></span>
-                                    <small class="mr-3">
-                                        <span>316</span> members
-                                    </small>
-
-                                    <span class="fas fa-unlock-alt" aria-hidden="true"></span>
-                                    <small class="mr-3">
-                                        free to join
-                                    </small>
                                 </div>
                                 <p>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-                                    bibendum
-                                    nunc dapibus sagittis. Etiam tincidunt, turpis at pharetra aliquet, metus odio
-                                    convallis
-                                    augue, ac malesuada velit dolor eget lorem. Ut feugiat dignissim tortor. Nam
-                                    sagittis nisl
-                                    vitae arcu luctus, eget maximus lorem vulputate.
-                                </p>
+                                    bibendum nunc dapibus sagittis.</p>
                             </li>
                         </ul>
                     </div>
-                    <div class="col-4">
-                        <h4 class="mb-3">Side block</h4>
+
+                    <div class="col">
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-sync mr-2" aria-hidden="true"></i>
+                                Reload problems list
+                            </button>
+                        </div>
+
+                        <div class="d-flex mb-4">
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-file-pdf mr-2" aria-hidden="true"></i>
+                                Open problems in pdf
+                            </button>
+                        </div>
+
+                        <div class="d-flex mb-2">
+                            <button class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-plus mr-2" aria-hidden="true"></i>
+                                Add problem
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

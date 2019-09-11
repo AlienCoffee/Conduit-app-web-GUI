@@ -1,6 +1,6 @@
-<div class="row p-3">
-    <div class="d-flex">
-        <div class="col mr-3">
+<div class="row p-3 mt-2">
+    <div class="d-flex w-100">
+        <div class="col mr-3 flex-grow-0">
             <div class="row">
                 <div style="height: 32px; width: 32px; background: gray;"
                     data-toggle="tooltip" data-placement="bottom" 
@@ -10,10 +10,10 @@
         </div>
         <div class="flex-grow-1">
             <div class="d-flex justify-content-between">
-                <h5>%title%</h5>
+                <h4>%title%</h4>
                 <div>
                     <span class="px-3 text-muted">
-                        <sub>%date%</sub>
+                        %date%
                     </span>
                     <span class="pl-3 text-success">
                         <span>%likes%</span> likes
@@ -23,8 +23,12 @@
                     </button>
                 </div>
             </div>
-            <div class="mb-2">%hashtags%</div>
-            <div>%content%</div>
+            <div class="mb-2">
+                %hashtags%
+            </div>
+            <div>
+                %content%
+            </div>
         </div>
     </div>
 </div>

@@ -5,7 +5,7 @@ import { ResponseBox } from "../bridge/gen-dtos";
 
 export abstract class LoadingComponent <T> extends AbstractComponent {
 
-    protected intervalDesc : number = null
+    protected intervalDesc : NodeJS.Timeout = null
 
     constructor (
         /**

@@ -4,8 +4,7 @@ import { GetController } from "../bridge/gen-apis";
 import { compareDates } from "../common";
 import { makeBlogPostElement } from "../bridge/gen-htmls";
 
-
-export class NewsWall extends LoadingComponent <ResponseBox <Array <BlogPost>>> {
+export class NewsWall extends LoadingComponent <ResponseBox <BlogPost []>> {
 
     private posts : BlogPost [] = [];
 
@@ -13,18 +12,21 @@ export class NewsWall extends LoadingComponent <ResponseBox <Array <BlogPost>>> 
         protected updateInterval : number = null,
         protected spinner        : HTMLDivElement = null,
         protected div            : HTMLDivElement,
-        protected noDiv          : HTMLDivElement
+        protected noDiv          : HTMLDivElement,
+        protected loadMore       : HTMLUListElement,
+        protected loadMoreButton : HTMLButtonElement
     ) {
         super (updateInterval, spinner);
     }
 
     public init (): void {}
 
-    public makeRequest () : Promise <ResponseBox <Array <BlogPost>>> {
+    public makeRequest () : Promise <ResponseBox <BlogPost []>> {
         return GetController.getMainBlogPosts (null);
     }
 
-    public handleResponse (response: ResponseBox <Array <BlogPost>>): void {
+    public handleResponse (response: ResponseBox <BlogPost []>): void {
+        this.loadMoreButton.setAttribute ("disabled", "");
         this.checkErrorsAndDo (response, obj => {
             this.mergeBlogPosts (this.posts, obj);
             if (this.noDiv != null) {
@@ -39,6 +41,15 @@ export class NewsWall extends LoadingComponent <ResponseBox <Array <BlogPost>>> 
                 if (post.html != null) { continue; } // post is already on screen
                 this.renderBlogPost (post, i, last ? null : this.posts [i + 1]);
             }
+
+            this.loadMoreButton.removeAttribute ("disabled");
+            if (response.params.get ("more") as boolean) {
+                $(this.loadMore).show ();
+            } else {
+                $(this.loadMore).hide ();
+            }
+
+            ($('[data-toggle="tooltip"]') as any).tooltip ();
         });
     }
 
@@ -52,8 +63,10 @@ export class NewsWall extends LoadingComponent <ResponseBox <Array <BlogPost>>> 
     }
 
     private renderBlogPost (post : BlogPost, index : number, next : BlogPost) {
+        let likes = post.likes === 1 ? "1 like" : post.likes + " likes";
         let postDiv = makeBlogPostElement (post.author, post.title, 
-            post.published.toString (), "" + post.likes, "", "");
+            post.published.toString (), likes, "", post.content);
+        post.html = postDiv;
 
         if (next != null) {
             this.div.insertBefore (postDiv, next.html);
