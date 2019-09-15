@@ -7,6 +7,8 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
 
     protected intervalDesc : NodeJS.Timeout = null
 
+    protected data : T;
+
     constructor (
         /**
          * Update interval in seconds
@@ -31,6 +33,7 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
             this.handleResponse (res);
         }).catch ((rej : NetworkError) => {
             if (this.spinner) { $(this.spinner).hide (); }
+            console.log (rej);
 
             if (!rej.isSystem ()) {
                 var comment = rej.getComment (), message = rej.message;
@@ -52,9 +55,21 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
         }
     }
 
-    public abstract makeRequest () : Promise <T>;
+    public abstract makeRequest () : Promise <ResponseBox <T>>;
 
-    public abstract handleResponse (response : T) : void;
+    public abstract handleResponse (response : ResponseBox <T>) : void;
+
+    protected mergeData (receivedData : T, force : boolean) {
+        if (this.data == null || force) {
+            this.data = receivedData;
+        } else if (this.data instanceof Array && receivedData instanceof Array) {
+            let array = receivedData as Array <any>;
+
+            let ids = new Set (this.data.map (post => post.postId));
+            array = array.filter (post => !ids.has (post.postId));
+            this.data.push (...array);
+        }
+    }
 
     public destroy (): void {
         if (this.intervalDesc !== null) {

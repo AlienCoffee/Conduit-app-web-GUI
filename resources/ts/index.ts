@@ -11,7 +11,7 @@ export let up : UserProfile;
 export let nw : NewsWall;
 
 window.onload = function () {
-    let spinner = element ("news-wall-spinner") as HTMLDivElement;
+    let spinner = element ("wall-spinner") as HTMLDivElement;
     nw = new NewsWall (-1, spinner);
     up = new UserProfile ();
 }

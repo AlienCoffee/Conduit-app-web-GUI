@@ -33,7 +33,7 @@
                         <h2>Available periods</h2>
     
 						<div class="spinner-grow text-primary ml-2" 
-							id="news-wall-spinner"></div>
+							id="wall-spinner"></div>
                     </div>
 
 					
@@ -46,8 +46,8 @@
 						</div>
 
 						<div class="col-9">
-							<!--
-							<ul class="list-group">
+							<ul class="list-group" id="periods-wall">
+								<!--
 								<li class="list-group-item list-group-item-action">
 									<div class="d-flex justify-content-between">
 										<h5>Period #3</h5>
@@ -150,8 +150,8 @@
 										augue, ac malesuada velit dolor eget lorem. Ut feugiat dignissim tortor.
 									</p>
 								</li>
+								-->
 							</ul>
-							-->
 						</div>
 
 						<div class="col">
