@@ -13,7 +13,7 @@
 
             <c:choose>
             	<c:when test="${user != null && user.getId () > 0}">
-            		<h4>Welcome, <code>${user.getLogin ()}</code></h4>
+					<h4>Welcome, <code>${user.getLogin ()}</code></h4>
            			
            			<div class="pl-3 mt-3">
            				<i class="fas fa-star mr-2" aria-hidden="true"></i>
@@ -42,16 +42,19 @@
 			            </li>
 			        </ul>
         
-            		<div class="d-flex">
+            		<div class="d-flex align-items-center">
 						<button class="btn btn-sm btn-outline-secondary"
 								id="user-profile-logout-button">
 	                        Log out
-	                    </button>
+						</button>
+
+						<div class="spinner-grow spinner-grow-sm text-primary ml-2" 
+							id="user-profile-spinner"></div>
 	                </div>
             	</c:when>
             	
             	<c:otherwise>
-            		<h4>Profile</h4>
+					<h4>Profile</h4>
             	
             		<p class="pl-3 py-1">Login or register on site to continue work</p>
 		            <form class="pl-3">
@@ -74,14 +77,17 @@
 		                        placeholder="Password">
 		                </div>
 		
-		                <div class="d-flex justify-content-end">
+		                <div class="d-flex justify-content-end align-items-center">
+							<div class="spinner-grow spinner-grow-sm text-primary mr-2" 
+								id="user-profile-spinner"></div>
+
 							<a class="btn btn-sm btn-outline-secondary" href="/registration">
 		                        Register
 							</a>
 							<button class="btn btn-sm btn-primary ml-2"
 									id="user-profile-login-button">
 		                        Login
-		                    </button>
+							</button>
 		                </div>
 		            </form>
             	</c:otherwise>

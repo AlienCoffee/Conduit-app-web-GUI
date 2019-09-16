@@ -6,7 +6,6 @@ export let up : UserProfile;
 export let pw : PeriodsWall;
 
 window.onload = function () {
-    let spinner = element ("wall-spinner") as HTMLDivElement;
-    pw = new PeriodsWall (-1, spinner);
+    pw = new PeriodsWall (-1);
     up = new UserProfile ();
 }

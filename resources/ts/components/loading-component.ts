@@ -5,7 +5,8 @@ import { ResponseBox } from "../bridge/gen-dtos";
 
 export abstract class LoadingComponent <T> extends AbstractComponent {
 
-    protected intervalDesc : NodeJS.Timeout = null
+    protected intervalDesc : NodeJS.Timeout = null;
+    protected spinner      : HTMLDivElement;
 
     protected data : T;
 
@@ -13,8 +14,7 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
         /**
          * Update interval in seconds
          */
-        protected updateInterval : number = null,
-        protected spinner        : HTMLDivElement = null
+        protected updateInterval : number = null
     ) {
         super ();
 
@@ -33,11 +33,10 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
             this.handleResponse (res);
         }).catch ((rej : NetworkError) => {
             if (this.spinner) { $(this.spinner).hide (); }
-            console.log (rej);
 
-            if (!rej.isSystem ()) {
+            if (rej instanceof NetworkError && !rej.isSystem ()) {
                 var comment = rej.getComment (), message = rej.message;
-                var tile = new ErrorPopupTile (10, message, comment);
+                var tile = new ErrorPopupTile (5, message, comment);
                 tile.show ();
             } else { console.log (rej); }
         });

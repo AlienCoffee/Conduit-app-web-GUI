@@ -1,9 +1,11 @@
 import { AbstractComponent } from "./abstract-component";
 import { element, inputElement } from "../common";
-import { sendRequest } from "../network";
+import { sendRequest, NetworkError } from "../network";
+import { ErrorPopupTile } from "../popup";
 
 export class UserProfile extends AbstractComponent {
 
+    protected spinner       : HTMLDivElement
     protected isAuthorizedE : HTMLInputElement;
     protected isAuthorized  : boolean;
 
@@ -22,6 +24,8 @@ export class UserProfile extends AbstractComponent {
     public init (): void {
         this.isAuthorizedE = inputElement ("user-profile-authorized");
         this.isAuthorized = JSON.parse (this.isAuthorizedE.value);
+        this.spinner = element ("user-profile-spinner");
+        if (this.spinner) { $(this.spinner).hide (); }
         if (this.isAuthorized) {
             this.logoutButton = element ("user-profile-logout-button");
             this.logoutButton.onclick = event => {
@@ -47,16 +51,35 @@ export class UserProfile extends AbstractComponent {
 
         formData.append ("password", password);
         formData.append ("remember-me", "on");
-        formData.append ("login", login);
+        formData.append ("username", login);
 
+        if (this.spinner) { $(this.spinner).show (); }
         sendRequest ("POST", "/api/unchecked/login", formData).then ((response : any) => {
             if (response.authorized as boolean) { location.reload (); }
+        }).catch ((rej : NetworkError) => {
+            if (this.spinner) { $(this.spinner).hide (); }
+
+            if (rej instanceof NetworkError && !rej.isSystem ()) {
+                var comment = rej.getComment (), message = rej.message;
+                var tile = new ErrorPopupTile (5, message, comment);
+                tile.show ();
+            } else { console.log (rej); }
         });
     }
 
     private performLogout () : void {
+        if (this.spinner) { $(this.spinner).show (); }
         sendRequest ("POST", "/api/logout", null).then ((response : any) => {
+            if (this.spinner) { $(this.spinner).hide (); }
             if (!(response.authorized as boolean)) { location.reload (); }
+        }).catch ((rej : NetworkError) => {
+            if (this.spinner) { $(this.spinner).hide (); }
+
+            if (rej instanceof NetworkError && !rej.isSystem ()) {
+                var comment = rej.getComment (), message = rej.message;
+                var tile = new ErrorPopupTile (5, message, comment);
+                tile.show ();
+            } else { console.log (rej); }
         });
     }
     

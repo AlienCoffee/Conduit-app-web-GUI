@@ -33,130 +33,26 @@
                         <h2>Available periods</h2>
     
 						<div class="spinner-grow text-primary ml-2" 
-							id="wall-spinner"></div>
+							id="periods-wall-spinner"></div>
                     </div>
 
 					
 					<div class="row mb-5">
-						<div class="text-left p-2 ml-3" id="periods-wall-nothing">
-							<span>
-								Hm. Seems to be nothing here. 
-								Maybe here will appear something soon...
-							</span>
-						</div>
-
 						<div class="col-9">
-							<ul class="list-group" id="periods-wall">
-								<!--
-								<li class="list-group-item list-group-item-action">
-									<div class="d-flex justify-content-between">
-										<h5>Period #3</h5>
-										<div>
-											<button class="btn btn-sm btn-link">
-												registration
-											</button>
-											<button class="btn btn-sm btn-link">
-												<span class="fas fa-info"></span>
-											</button>
-										</div>
-									</div>
-									<div class="text-secondary">
-										<span class="fas fa-calendar" aria-hidden="true"></span>
-										<small class="mr-3">
-											28.07.2019 - 14.09.2020
-										</small>
+							<div class="text-left p-2 ml-3" id="periods-wall-nothing">
+								<span>
+									Hm. Seems to be nothing here. 
+									Maybe here will appear something soon...
+								</span>
+							</div>
 
-										<span class="fas fa-book" aria-hidden="true"></span>
-										<small class="mr-3">
-											registration
-										</small>
-
-										<span class="fas fa-user" aria-hidden="true"></span>
-										<small class="mr-3">
-											Shemplo
-										</small>
-									</div>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-										bibendum
-										nunc dapibus sagittis. Etiam tincidunt, turpis at pharetra aliquet, metus odio
-										convallis
-										augue, ac malesuada velit dolor eget lorem. Ut feugiat dignissim tortor.
-									</p>
-								</li>
-								<li class="list-group-item list-group-item-action">
-									<div class="d-flex justify-content-between">
-										<h5>Period #2</h5>
-										<div>
-											<button class="btn btn-sm btn-link">
-												<span class="fas fa-info"></span>
-											</button>
-										</div>
-									</div>
-									<div class="text-secondary">
-										<span class="fas fa-calendar" aria-hidden="true"></span>
-										<small class="mr-3">
-											08.03.2018 - 18.03.2020
-										</small>
-
-										<span class="fas fa-book" aria-hidden="true"></span>
-										<small class="mr-3">
-											in process
-										</small>
-
-										<span class="fas fa-user" aria-hidden="true"></span>
-										<small class="mr-3">
-											Shemplo
-										</small>
-									</div>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-										bibendum
-										nunc dapibus sagittis. Etiam tincidunt, turpis at pharetra aliquet, metus odio
-										convallis
-										augue, ac malesuada velit dolor eget lorem.
-									</p>
-								</li>
-								<li class="list-group-item list-group-item-action">
-									<div class="d-flex justify-content-between">
-										<h5>Period #1</h5>
-										<div>
-											<button class="btn btn-sm btn-link">
-												<span class="fas fa-info"></span>
-											</button>
-										</div>
-									</div>
-									<div class="text-secondary">
-										<span class="fas fa-calendar" aria-hidden="true"></span>
-										<small class="mr-3">
-											22.04.2017 - 03.11.2019
-										</small>
-
-										<span class="fas fa-book" aria-hidden="true"></span>
-										<small class="mr-3">
-											in process
-										</small>
-
-										<span class="fas fa-user" aria-hidden="true"></span>
-										<small class="mr-3">
-											Shemplo
-										</small>
-									</div>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-										bibendum
-										nunc dapibus sagittis. Etiam tincidunt, turpis at pharetra aliquet, metus odio
-										convallis
-										augue, ac malesuada velit dolor eget lorem. Ut feugiat dignissim tortor.
-									</p>
-								</li>
-								-->
-							</ul>
+							<ul class="list-group" id="periods-wall"></ul>
 						</div>
 
 						<div class="col">
 							<div class="d-flex mb-2">
-								<button class="btn btn-sm btn-outline-secondary">
+								<button class="btn btn-sm btn-outline-secondary"
+										id="periods-wall-update">
 									<i class="fas fa-sync mr-2" aria-hidden="true"></i>
 									Reload periods list
 								</button>

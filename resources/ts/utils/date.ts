@@ -1,5 +1,9 @@
 export class DateUtils {
 
+    public static isValid (date : Date) {
+        return !isNaN (+date);
+    }
+
     public static format (date : Date, withTime : boolean) : string {
         let value = date.getDate ();
         let day = value < 10 ? "0" + value : "" + value;

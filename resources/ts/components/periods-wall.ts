@@ -1,23 +1,28 @@
 import { LoadingComponent } from "./loading-component";
-import { ResponseBox, PeriodEntity } from "../bridge/gen-dtos";
+import { ResponseBox, PeriodEntity, PeriodStatus } from "../bridge/gen-dtos";
 import { GetController } from "../bridge/gen-apis";
 import { compareDates, element } from "../common";
 import { makePeriodListElement } from "../bridge/gen-htmls";
+import { DateUtils } from "../utils/date";
 
 export class PeriodsWall extends LoadingComponent <PeriodEntity []> {
 
-    protected wallUL      : HTMLUListElement;
-    protected nonthingDiv : HTMLDivElement;
+    protected updateButton : HTMLButtonElement; 
+    protected wallUL       : HTMLUListElement;
+    protected nonthingDiv  : HTMLDivElement;
 
     constructor (
         protected updateInterval : number = null,
-        protected spinner        : HTMLDivElement = null
     ) {
-        super (updateInterval, spinner);
+        super (updateInterval);
     }
 
     public init (): void {
+        this.updateButton = element ("periods-wall-update");
+        this.updateButton.onclick = () => this.reloadData ();
+
         this.nonthingDiv = element ("periods-wall-nothing");
+        this.spinner = element ("periods-wall-spinner");
         this.wallUL = element ("periods-wall");
 
         this.reloadData ();
@@ -73,9 +78,13 @@ export class PeriodsWall extends LoadingComponent <PeriodEntity []> {
     }
 
     private renderPeriodEntity (period : PeriodEntity, index : number, next : PeriodEntity) {
-        let periodLI = makePeriodListElement (period.name, "" + period.issued, 
-            period.author.login, "" + period.since, "" + period.status, 
-            period.description);
+        let published = DateUtils.format (period.issued, true);
+        let since = DateUtils.format (period.since, false);
+        let until = DateUtils.isValid (period.until)
+                  ? DateUtils.format (period.until, false) 
+                  : "...";
+        let periodLI = makePeriodListElement (period.name, published, period.author.login, 
+            since + " - " + until, period.status.name, period.description);
         period.html = periodLI;
 
         if (next != null) {

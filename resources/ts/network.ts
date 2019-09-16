@@ -1,8 +1,11 @@
+import { ResponseBox } from "./bridge/gen-dtos";
+
 //
 // (c) Shemplo
 //
 
-export function sendRequest <T> (method : string, url : string, data : FormData) : Promise <T> {
+export function sendRequest <T extends ResponseBox <any>> (method : string, 
+        url : string, data : FormData) : Promise <T> {
     var metas = document.getElementsByTagName ("meta");
 	var token  = metas ["_csrf"].getAttribute ("content");
 	var header = metas ["_csrf_header"].getAttribute ("content");
@@ -10,33 +13,44 @@ export function sendRequest <T> (method : string, url : string, data : FormData)
     return new Promise <T> ((res, rej) => {
         var descriptor = new XMLHttpRequest ();
         
-        descriptor.onreadystatechange = function () {
-            if (descriptor.readyState != 4) { return; }
-
-            if (descriptor.status >= 200 && descriptor.status < 300) {
-                var text = descriptor.responseText;
-                if (text && (text.startsWith ("{") || text.startsWith ("["))) {
-                    res (JSON.parse (descriptor.responseText) as T);
-                } else {
-                    let title = "Failed to parse server response";
-                    rej (new NetworkError (title, text));
-                }
-            } else {
-                let code = descriptor.status;
-
-                let message = "Response code: " + code + ". If you don't know " 
-                            + " how to fix this problem, call for moderators";
-                let title = "Request to server failed";
-
-                rej (new NetworkError (title, message, code < 500));
-            }
-        };
-
         descriptor.onerror = function (pe : ProgressEvent) {
             let error = new NetworkError ("Failed to make request to server", 
                 "Check your internet connection", false);
             rej (error);
         }
+
+        descriptor.onreadystatechange = function () {
+            if (descriptor.readyState != 4) { return; }
+            console.log (descriptor);
+
+            let responseText = descriptor.responseText;
+            try {
+                let response = JSON.parse (responseText) as T;
+                if   (!response.error) { res (response); } 
+                else { 
+                    let title = "Error occured";
+                    let message = !response.message || response.message.length == 0
+                                ? "(No commentaries from server for this error)"
+                                : response.message;
+                    rej (new NetworkError (title, message, false));
+                }
+            } catch (error) { // everything is bad b/c it is not JSON answer
+                if (descriptor.status == 0 || descriptor.responseURL == "") {
+                    descriptor.onerror (null);
+                } else {
+                    let isSystemError = descriptor.status >= 500;
+                    let title = "Critical error occured";
+                    let message = "Response code: " + descriptor.status + ". ";
+                    if (descriptor.responseText != null && descriptor.responseText.length > 0) {
+                        message += "Server answer is available in console log";
+                    } else {
+                        message += "No iformation provided for this error";
+                    }
+    
+                    rej (new NetworkError (title, message, isSystemError));
+                }
+            }
+        };
         
         descriptor.open (method, url, true);
         descriptor.setRequestHeader (header, token);

@@ -14,10 +14,9 @@ export class NewsWall extends LoadingComponent <BlogPost []> {
     protected loadMore       : HTMLUListElement;
 
     constructor (
-        protected updateInterval : number = null,
-        protected spinner        : HTMLDivElement = null
+        protected updateInterval : number = null
     ) {
-        super (updateInterval, spinner);
+        super (updateInterval);
     }
 
     public init (): void {
@@ -26,6 +25,7 @@ export class NewsWall extends LoadingComponent <BlogPost []> {
 
         this.nonthingDiv = element ("news-wall-nothing");
         this.loadMore = element ("news-wall-more");
+        this.spinner = element ("news-wall-spinner");
         this.wallDiv = element ("news-wall");
 
         this.reloadData ();

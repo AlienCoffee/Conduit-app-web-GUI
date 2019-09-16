@@ -33,7 +33,7 @@
                         <h2>Recent news</h2>
     
 						<div class="spinner-grow text-primary ml-2" 
-							id="wall-spinner"></div>
+							id="news-wall-spinner"></div>
 					</div>
 					
 					<div class="text-left p-2" id="news-wall-nothing">
