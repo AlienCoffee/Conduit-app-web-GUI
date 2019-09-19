@@ -14,6 +14,10 @@ body {
     background-color: whitesmoke;
 }
 
+.w-20px {
+    width: 20px;
+}
+
 .popup-layer {
     position: fixed;
     right   : 0;

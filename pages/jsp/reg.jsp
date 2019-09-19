@@ -26,35 +26,122 @@
         
         <main class="container">
             <div class="row">
-            	<jsp:include page="left-side-bar.jsp" />
-            	
-            	<div class="col-9">
-                    <div class="d-flex justify-content-start align-items-center mt-4 ml-1">
-                        <h2>Recent news</h2>
-    
+				<div class="col-3"></div>
+				<div class="col-6 mt-2">
+					<div class="d-flex justify-content-start align-items-center mt-2 ml-1">
+						<h2>Registration in platform</h2>
+
 						<div class="spinner-grow text-primary ml-2" 
-							id="news-wall-spinner"></div>
-					</div>
-					
-					<div class="text-left p-2" id="news-wall-nothing">
-						<span>
-							Hm. Seems to be nothing here. 
-							Maybe here will appear something soon...
-						</span>
+							id="reg-spinner"></div>
 					</div>
 
-					<div id="news-wall"></div>
-					
-					<ul class="pagination justify-content-center mt-3 d-none"
-							id="news-wall-more">
-						<li class="page-item">
-							<button class="btn btn-outline-info"
-									id="news-wall-more-button">
-								Load more...
+					<p class="ml-2">
+						Just fill 3 fields and you are almost in platform
+					</p>
+
+					<form class="mt-4">
+						<div class="form-group mb-3">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fas fa-at w-20px"></span>
+									</span>
+								</div>
+								<input type="text" class="form-control user-reg-main-group" 
+									placeholder="Login" id="reg-login">
+							</div>
+								
+							<p class="small text-secondary ml-2 mt-1 mb-2">
+								Login should be at least <b>3 characters</b> in length
+								and contains only <code>a-z</code>, <code>0-9</code>, 
+								<code>_</code>, <code>-</code> symbols
+							</p>
+						</div>
+						<div class="form-group mb-3">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fas fa-phone w-20px"></span>
+									</span>
+								</div>
+								<input type="tel" class="form-control user-reg-main-group"
+									placeholder="Phone" id="reg-phone">
+							</div>
+								
+							<p class="small text-secondary ml-2 mt-1 mb-2">
+								Phone number will be used for SMS verification and other purposes
+							</p>
+						</div>
+						<div class="form-group mb-3">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fas fa-key w-20px"></span>
+									</span>
+								</div>
+								<input type="password" class="form-control user-reg-main-group" 
+									placeholder="Password" id="reg-password">
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" 
+											id="reg-password-view">
+										<span class="fas fa-eye w-20px"></span>
+									</button>
+								</div>
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary user-reg-main-group" 
+											id="reg-password-random">
+										<span class="fas fa-dice w-20px"></span>
+									</button>
+								</div>
+							</div>
+								
+							<p class="small text-secondary ml-2 mt-1 mb-2">
+								Password should be at least <b>8 characters</b> in length and can
+								contain any symbols
+							</p>
+						</div>
+						<div class="form-group mb-3 d-none" id="reg-secret-container">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fas fa-question w-20px"></span>
+									</span>
+								</div>
+								<input type="text" class="form-control"
+									placeholder="Verification code" 
+									id="reg-secret">
+
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary" 
+											id="reg-secret-reject">
+										<span class="fas fa-times w-20px"></span>
+									</button>
+								</div>
+							</div>
+								
+							<p class="small text-secondary ml-2 mt-1 mb-2">
+								Verification code from your phone 
+								<b>(but now just repeat password)</b>
+							</p>
+						</div>
+
+						<div class="d-flex justify-content-end align-items-center">
+							<div class="mr-2">
+								<small class="text-info">
+									By clicking 
+									<b>“<span id="reg-button-notice">Sign up</span>”</b>, 
+									you agree to our Privacy Statement
+								</small>
+							</div>
+
+							<button class="btn btn-primary ml-2"
+									id="reg-button">
+								Sign up
 							</button>
-						</li>
-					</ul>
-                </div>
+						</div>
+					</form>
+				</div>
+				<div class="col-3"></div>
             </div>
         </main>
 

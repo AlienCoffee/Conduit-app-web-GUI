@@ -26,11 +26,11 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
         }
     }
 
-    public reloadData () {
+    public reloadData (descriptor? : string) {
         if (this.spinner) { $(this.spinner).show (); }
-        this.makeRequest ().then (res => {
+        this.makeRequest (descriptor).then (res => {
             if (this.spinner) { $(this.spinner).hide (); }
-            this.handleResponse (res);
+            this.handleResponse (res, descriptor);
         }).catch ((rej : NetworkError) => {
             if (this.spinner) { $(this.spinner).hide (); }
 
@@ -47,16 +47,14 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
         if (response && !response.error) {
             callback (response.object);
         } else if (response && response.error) {
-            let message = response.message ? response.message 
-                        : "(Message is not available)";
-            new ErrorPopupTile (5, "Error occured", message)
-              . show ();
+            let message = response.message ? response.message : "(Message is not available)";
+            new ErrorPopupTile (5, "Error occured", message).show ();
         }
     }
 
-    public abstract makeRequest () : Promise <ResponseBox <T>>;
+    public abstract makeRequest (descriptor? : string) : Promise <ResponseBox <T>>;
 
-    public abstract handleResponse (response : ResponseBox <T>) : void;
+    public abstract handleResponse (response : ResponseBox <T>, descriptor? : string) : void;
 
     protected mergeData (receivedData : T, force : boolean) {
         if (this.data == null || force) {

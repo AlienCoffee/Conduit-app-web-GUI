@@ -81,9 +81,14 @@
 							<div class="spinner-grow spinner-grow-sm text-primary mr-2" 
 								id="user-profile-spinner"></div>
 
-							<a class="btn btn-sm btn-outline-secondary" href="/registration">
-		                        Register
-							</a>
+							<div class="btn-group">
+								<a class="btn btn-sm btn-outline-secondary" href="/reg">
+									Register
+								</a>
+								<a class="btn btn-sm btn-outline-secondary" href="/login">
+									Advanced
+								</a>
+							</div>
 							<button class="btn btn-sm btn-primary ml-2"
 									id="user-profile-login-button">
 		                        Login

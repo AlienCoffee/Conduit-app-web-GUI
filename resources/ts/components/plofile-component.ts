@@ -1,6 +1,6 @@
 import { AbstractComponent } from "./abstract-component";
 import { element, inputElement } from "../common";
-import { sendRequest, NetworkError } from "../network";
+import { sendRequest, NetworkError, catchErrorWithSpinner } from "../network";
 import { ErrorPopupTile } from "../popup";
 
 export class UserProfile extends AbstractComponent {
@@ -57,13 +57,7 @@ export class UserProfile extends AbstractComponent {
         sendRequest ("POST", "/api/unchecked/login", formData).then ((response : any) => {
             if (response.authorized as boolean) { location.reload (); }
         }).catch ((rej : NetworkError) => {
-            if (this.spinner) { $(this.spinner).hide (); }
-
-            if (rej instanceof NetworkError && !rej.isSystem ()) {
-                var comment = rej.getComment (), message = rej.message;
-                var tile = new ErrorPopupTile (5, message, comment);
-                tile.show ();
-            } else { console.log (rej); }
+            catchErrorWithSpinner (rej, this.spinner);
         });
     }
 

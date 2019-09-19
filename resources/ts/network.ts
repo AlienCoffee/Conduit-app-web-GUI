@@ -1,4 +1,5 @@
 import { ResponseBox } from "./bridge/gen-dtos";
+import { ErrorPopupTile } from "./popup";
 
 //
 // (c) Shemplo
@@ -56,6 +57,15 @@ export function sendRequest <T extends ResponseBox <any>> (method : string,
         descriptor.setRequestHeader (header, token);
         descriptor.send (data);
     });
+}
+
+export function catchErrorWithSpinner (rej : Error, spinner? : HTMLDivElement) : void {
+    if (spinner) { $(spinner).hide (); }
+
+    if (rej instanceof NetworkError && !rej.isSystem ()) {
+        var comment = rej.getComment (), message = rej.message;
+        new ErrorPopupTile (5, message, comment).show ();
+    } else { console.log (rej); }
 }
 
 export class NetworkError implements Error {
