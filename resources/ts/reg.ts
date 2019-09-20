@@ -82,10 +82,10 @@ export class UserRegistration extends LoadingComponent <void> {
         let login = this.regLogin.value;
         let phone = this.regPhone.value;
 
-        if (descriptor === UserRegState.FIELDS_FILLING.value) {
+        if (descriptor === UserRegState.VERIFICATION.value) {
+            return CreateController.createUser (login, phone, password, secret);
+        } else if (descriptor === UserRegState.FIELDS_FILLING.value) {
             return CreateController.createUser (login, phone, password);
-        } else if (descriptor === UserRegState.VERIFICATION.value) {
-            return CreateController.verifyUser (login, phone, password, "");
         }
     }
 
