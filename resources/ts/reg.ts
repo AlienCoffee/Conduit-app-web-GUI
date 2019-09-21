@@ -5,6 +5,7 @@ import { catchErrorWithSpinner, NetworkError } from "./network";
 import { LoadingComponent } from "./components/loading-component";
 import { ResponseBox } from "./bridge/gen-dtos";
 import { Enum, Enumerable } from "../lib/jenum";
+import { InfoPopupTile } from "./popup";
 
 //
 // (c) Shemplo
@@ -17,6 +18,8 @@ window.onload = function () {
 }
 
 export class UserRegistration extends LoadingComponent <void> {
+
+    // TODO: add handler on reset verification code button
 
     private regButtonNotice : HTMLSpanElement;
     private regButton  : HTMLButtonElement;
@@ -97,7 +100,12 @@ export class UserRegistration extends LoadingComponent <void> {
                 this.updateForm ();
             });
         } else if (descriptor === UserRegState.VERIFICATION.value) {
-            //
+            this.checkErrorsAndDo (response, () => {
+                let message = "In 3 seconds you will be redirected to login page" 
+                            + " to continue work";
+                new InfoPopupTile (3, "Successfully registered", message).show ()
+                setTimeout (() => { location.href = "/login"; }, 3000);
+            });
         }
     }
 

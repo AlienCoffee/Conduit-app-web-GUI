@@ -81,6 +81,19 @@ export class PopupTile {
 
 }
 
+export class InfoPopupTile extends PopupTile {
+
+    constructor (
+        timeout : number,
+        title   : string,
+        message : string
+    ) { 
+        var style : string = PopupTile.styles [0];
+        super (timeout, title, message, style); 
+    }
+
+}
+
 export class ErrorPopupTile extends PopupTile {
 
     constructor (

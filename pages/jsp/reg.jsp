@@ -113,7 +113,7 @@
 
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary" 
-											id="reg-secret-reject">
+											id="reg-secret-reject" disabled>
 										<span class="fas fa-times w-20px"></span>
 									</button>
 								</div>
