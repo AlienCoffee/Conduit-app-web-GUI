@@ -1,6 +1,6 @@
 import { AbstractComponent } from "./abstract-component";
 import { NetworkError } from "../network";
-import { PopupTile, ErrorPopupTile } from "../popup";
+import { ErrorPopupTile } from "../popup";
 import { ResponseBox } from "../bridge/gen-dtos";
 
 export abstract class LoadingComponent <T> extends AbstractComponent {

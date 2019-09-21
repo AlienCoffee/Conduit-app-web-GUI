@@ -1,10 +1,8 @@
-import { AbstractComponent } from "./components/abstract-component";
 import { element, inputElement } from "./common";
 import { CreateController } from "./bridge/gen-apis";
-import { catchErrorWithSpinner, NetworkError } from "./network";
 import { LoadingComponent } from "./components/loading-component";
 import { ResponseBox } from "./bridge/gen-dtos";
-import { Enum, Enumerable } from "../lib/jenum";
+import { Enum, EnumType } from "../lib/jenum";
 import { InfoPopupTile } from "./popup";
 
 //
@@ -174,7 +172,7 @@ export class UserRegistration extends LoadingComponent <void> {
 }
 
 @Enum <UserRegState> ("value")
-class UserRegState extends Enumerable {
+class UserRegState extends EnumType <UserRegState> () {
     
     static readonly FIELDS_FILLING = new UserRegState ("fields-filling"); 
     static readonly VERIFICATION   = new UserRegState ("verification");

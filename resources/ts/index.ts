@@ -1,6 +1,4 @@
 import { NewsWall } from "./components/news-wall";
-import { PopupTile } from "./popup";
-import { element } from "./common";
 import { UserProfile } from "./components/plofile-component";
 
 //
