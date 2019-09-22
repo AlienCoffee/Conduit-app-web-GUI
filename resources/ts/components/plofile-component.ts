@@ -10,6 +10,7 @@ export class UserProfile extends AbstractComponent {
     protected isAuthorized  : boolean;
 
     protected loginPassword : HTMLInputElement;
+    protected loginRemember : HTMLInputElement;
     protected loginLogin    : HTMLInputElement;
     protected loginButton   : HTMLButtonElement;
 
@@ -34,14 +35,33 @@ export class UserProfile extends AbstractComponent {
             };
         } else {
             this.loginPassword = inputElement ("user-profile-password-field");
+            this.loginRemember = inputElement ("user-profile-remember");
             this.loginLogin = inputElement ("user-profile-login-field");
             this.loginButton = element ("user-profile-login-button");
             this.loginButton.onclick = event => {
                 event.preventDefault ();
                 this.performLogin ();
             };
+
+            [this.loginPassword, this.loginLogin].forEach (elem => {
+                elem.onchange = event => this.updateForm ();
+                elem.onkeyup = event => this.updateForm ();
+            });
+
+            setTimeout (() => this.updateForm (), 1500);
         }
     }    
+
+    private updateForm () {
+        let empty = [this.loginLogin, this.loginPassword].reduce (
+            (prev, curr, idx) => prev || !curr.value, false
+        );
+        if (!empty) {
+            this.loginButton.removeAttribute ("disabled");
+        } else {
+            this.loginButton.setAttribute ("disabled", "");
+        }
+    }
 
     private performLogin () : void {
         if (this.isAuthorized) { return; } // user is already authorized
@@ -50,8 +70,11 @@ export class UserProfile extends AbstractComponent {
         let formData = new FormData ();
 
         formData.append ("password", password);
-        formData.append ("remember-me", "on");
         formData.append ("username", login);
+        
+        if ((this.loginRemember && this.loginRemember.checked) || !this.loginRemember) {
+            formData.append ("remember-me", "on");
+        }
 
         if (this.spinner) { $(this.spinner).show (); }
         sendRequest ("POST", "/api/unchecked/login", formData).then ((response : any) => {

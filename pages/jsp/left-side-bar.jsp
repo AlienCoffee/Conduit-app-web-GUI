@@ -89,7 +89,7 @@
 									Advanced
 								</a>
 							</div>
-							<button class="btn btn-sm btn-primary ml-2"
+							<button class="btn btn-sm btn-primary ml-2" disabled
 									id="user-profile-login-button">
 		                        Login
 							</button>
