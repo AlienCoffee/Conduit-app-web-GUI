@@ -16,12 +16,6 @@ export class UserProfile extends AbstractComponent {
 
     protected logoutButton : HTMLButtonElement;
 
-    constructor (
-
-    ) {
-        super ();
-    }
-
     public init (): void {
         this.isAuthorizedE = inputElement ("user-profile-authorized");
         this.isAuthorized = JSON.parse (this.isAuthorizedE.value);

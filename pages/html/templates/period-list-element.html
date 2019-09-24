@@ -1,4 +1,5 @@
-<li class="list-group-item list-group-item-action">
+<li class="list-group-item list-group-item-action cursor-pointer">
+    <input type="hidden" value="%periodId%" />
     <div class="d-flex justify-content-between">
         <h5>%name%</h5>
         <div>
@@ -8,25 +9,33 @@
         </div>
     </div>
     <div class="text-secondary mb-1">
-        <span class="fas fa-calendar-day" aria-hidden="true"></span>
-        <small class="mr-3 ml-1">
-            %issued%
-        </small>
+        <span data-toggle="tooltip" data-placement="bottom" title="Issued date">
+            <span class="fas fa-calendar-day" aria-hidden="true"></span>
+            <small class="mr-3 ml-1">
+                %issued%
+            </small>
+        </span>
 
-        <span class="fas fa-user" aria-hidden="true"></span>
-        <small class="mr-3 ml-1">
-            %author%
-        </small>
+        <span data-toggle="tooltip" data-placement="bottom" title="Author">
+            <span class="fas fa-user" aria-hidden="true"></span>
+            <small class="mr-3 ml-1">
+                %author%
+            </small>
+        </span>
 
-        <span class="fas fa-calendar-week" aria-hidden="true"></span>
-        <small class="mr-3 ml-1">
-            %period%
-        </small>
+        <span data-toggle="tooltip" data-placement="bottom" title="Duration">
+            <span class="fas fa-calendar-week" aria-hidden="true"></span>
+            <small class="mr-3 ml-1">
+                %period%
+            </small>
+        </span>
 
-        <span class="fas fa-book" aria-hidden="true"></span>
-        <small class="mr-3 ml-1">
-            %status%
-        </small>
+        <span data-toggle="tooltip" data-placement="bottom" title="Status">
+            <span class="fas fa-book" aria-hidden="true"></span>
+            <small class="mr-3 ml-1">
+                %status%
+            </small>
+        </span>
     </div>
     <div>
         %description%

@@ -13,7 +13,7 @@
         <title>Conduit :: Periods</title>
         
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="resources/css/common.css"/>
+        <link rel="stylesheet" href="/resources/css/common.css"/>
         
         <link rel="shortcut icon" href="/resources/gfx/diary.png" 
 			type="image/x-icon" />
@@ -83,8 +83,8 @@
 
 		<jsp:include page="../bootstrap.jsp" />
 		
-		<script type="text/javascript" src="resources/lib/require.2.3.6.js"></script>
-		<script type="text/javascript" src="resources/js/ui.js"></script>
-		<script>loadContext (["periods"]);</script>
+		<script type="text/javascript" src="/resources/lib/require.2.3.6.js"></script>
+		<script type="text/javascript" src="/resources/js/ui.js"></script>
+		<script>loadContext ("", ["periods"]);</script>
     </body>
 </html>

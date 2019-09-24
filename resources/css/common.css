@@ -18,6 +18,17 @@ body {
     width: 20px;
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
 .popup-layer {
     position: fixed;
     right   : 0;

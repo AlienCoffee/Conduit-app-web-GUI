@@ -124,6 +124,6 @@
 		
 		<script type="text/javascript" src="resources/lib/require.2.3.6.js"></script>
 		<script type="text/javascript" src="resources/js/ui.js"></script>
-		<script>loadContext (["login"]);</script>
+		<script>loadContext ("", ["login"]);</script>
     </body>
 </html>

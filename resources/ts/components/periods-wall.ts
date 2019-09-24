@@ -4,6 +4,7 @@ import { GetController } from "../bridge/gen-apis";
 import { compareDates, element } from "../common";
 import { makePeriodListElement } from "../bridge/gen-htmls";
 import { DateUtils } from "../utils/date";
+import { WarningPopupTile } from "../popup";
 
 export class PeriodsWall extends LoadingComponent <PeriodEntity []> {
 
@@ -83,8 +84,19 @@ export class PeriodsWall extends LoadingComponent <PeriodEntity []> {
         let until = DateUtils.isValid (period.until)
                   ? DateUtils.format (period.until, false) 
                   : "...";
-        let periodLI = makePeriodListElement (period.name, published, period.author.login, 
-            since + " - " + until, period.status.name, period.description);
+        let periodLI = makePeriodListElement ("" + period.id, period.name, published, 
+            period.author.login, since + " - " + until, period.status.name, 
+            period.description);
+        periodLI.onclick = function () {
+            let pidHolder = $(periodLI).find ("input[type=hidden]") [0] as HTMLInputElement;
+            if (pidHolder) {
+                location.href = "/period/" + pidHolder.value;
+            } else {
+                new WarningPopupTile (3, "Element missed", 
+                    "Period ID holder element not found")
+                    .show ();
+            }
+        }
         period.html = periodLI;
 
         if (next != null) {

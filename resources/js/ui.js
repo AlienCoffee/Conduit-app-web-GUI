@@ -1,9 +1,9 @@
 
 var __page_context = {};
 
-var loadContext = function (filenames, callback) {
+var loadContext = function (prefix, filenames, callback) {
     for (var i = 0; i < filenames.length; i++) {
-        filenames [i] = "resources/ts/" + filenames [i];
+        filenames [i] = prefix + "resources/ts/" + filenames [i];
     }
 
     requirejs (filenames, function () { 
