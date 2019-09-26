@@ -20,6 +20,10 @@
     </head>
     
     <body>
+		<input type="hidden" value="${period.getId ()}" id="period-id"/>
+		<input type="hidden" value="${have_access_to_groups}"
+			id="groups-wall-access" />
+
 		<div class="px-4 popup-layer" id="popup"></div>
 		
 		<jsp:include page="../header.jsp" />
@@ -32,28 +36,32 @@
 					<h2>${period.getName ()}</h2>
 	
 					<div class="text-secondary">
-						<span data-toggle="tooltip" data-placement="bottom" title="Issued date">
+						<span data-toggle="tooltip" data-placement="bottom" title="Issued date"
+								class="cursor-none">
 							<span class="fas fa-calendar-day" aria-hidden="true"></span>
 							<small class="mr-3 ml-1">
 								${period.getIssued ()}
 							</small>
 						</span>
 
-						<span data-toggle="tooltip" data-placement="bottom" title="Author">
+						<span data-toggle="tooltip" data-placement="bottom" title="Author"
+								class="cursor-none">
 							<span class="fas fa-user" aria-hidden="true"></span>
 							<small class="mr-3 ml-1">
 								${period.getAuthor ().getLogin ()}
 							</small>
 						</span>
 
-						<span data-toggle="tooltip" data-placement="bottom" title="Duration">
+						<span data-toggle="tooltip" data-placement="bottom" title="Duration"
+								class="cursor-none">
 							<span class="fas fa-calendar-week" aria-hidden="true"></span>
 							<small class="mr-3 ml-1">
 								${period.getSince ()} - ${period.getUntil ()}
 							</small>
 						</span>
 
-						<span data-toggle="tooltip" data-placement="bottom" title="Status">
+						<span data-toggle="tooltip" data-placement="bottom" title="Status"
+								class="cursor-none">
 							<span class="fas fa-book" aria-hidden="true"></span>
 							<small class="mr-3 ml-1">
 								${period.getStatus ()}
@@ -65,186 +73,88 @@
 						${period.getDescription ()}
 					</p>
 	
-					<div class="container border rounded mt-4 mb-2 py-3">
-						<div class="d-flex justify-content-between">
-							<h5>
-								Registration for this period is available
-							</h5>
-	
-							<button class="btn btn-sm btn-primary">
-								Register right now
-							</button>
+					<c:if test="${period.status eq 'REGISTRATION'}">
+						<div class="container border rounded mt-4 mb-2 py-3">
+							<div class="d-flex justify-content-between">
+								<h5>
+									Registration for this period is available
+								</h5>
+		
+								<a href="/period/${period.getId ()}/reg" 
+										class="btn btn-sm btn-primary">
+									Register right now
+								</a>
+							</div>
+
+							<c:choose>
+								<c:when test="${have_assigned_roles}">
+									<div class="d-flex">
+										<span>You have already registered for roles: </span>
+										<!--
+										<div class="ml-2">
+											<mark>Teacher</mark>,
+											<mark>Org. committee</mark>
+										</div>.
+										-->
+									</div>
+								</c:when>
+
+								<c:otherwise>
+									<div>
+										You did not register for this period yet.
+									</div>
+								</c:otherwise>
+							</c:choose>
 						</div>
-						<div>
-							You did not register for this period yet.
-						</div>
-						<div class="d-flex">
-							<span>You have already registered for roles: </span>
-							<div class="ml-2">
-								<mark>Teacher</mark>,
-								<mark>Org. committee</mark>
-							</div>.
-						</div>
-					</div>
+					</c:if>
 	
 					<div class="container d-flex justify-content-start align-items-center mt-4">
 						<h4>Available groups</h4>
 	
-						<div class="spinner-grow text-primary ml-2"></div>
-					</div>
-	
-					<div class="row mb-5">
-						<div class="col-9">
-							<div class="text-left p-2">
-								<span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
-							</div>
-							<ul class="list-group">
-								<li class="list-group-item list-group-item-action">
-									<div class="d-flex justify-content-between">
-										<h5>Group #3</h5>
-										<div>
-											<button class="btn btn-sm btn-outline-primary">
-												Join group
-											</button>
-											<button class="btn btn-sm btn-link">
-												<span class="fas fa-info"></span>
-											</button>
-										</div>
-									</div>
-									<div class="text-secondary mb-1">
-										<span class="fas fa-calendar-day" aria-hidden="true"></span>
-										<small class="mr-3">
-											31.07.2019
-										</small>
-	
-										<span class="fas fa-paw" aria-hidden="true"></span>
-										<small class="mr-3">
-											study
-										</small>
-	
-										<span class="fas fa-user" aria-hidden="true"></span>
-										<small class="mr-3">
-											Shemplo
-										</small>
-	
-										<span class="fas fa-users" aria-hidden="true"></span>
-										<small class="mr-3">
-											<span>23</span> members
-										</small>
-	
-										<span class="fas fa-unlock-alt" aria-hidden="true"></span>
-										<small class="mr-3">
-											join by application
-										</small>
-									</div>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-										bibendum nunc dapibus sagittis.</p>
-								</li>
-								<li class="list-group-item list-group-item-action">
-									<div class="d-flex justify-content-between">
-										<h5>Group #2</h5>
-										<div>
-											<button class="btn btn-sm btn-link">
-												<span class="fas fa-info"></span>
-											</button>
-										</div>
-									</div>
-									<div class="text-secondary mb-1">
-										<span class="fas fa-calendar-day" aria-hidden="true"></span>
-										<small class="mr-3">
-											30.07.2019
-										</small>
-	
-										<span class="fas fa-paw" aria-hidden="true"></span>
-										<small class="mr-3">
-											study
-										</small>
-	
-										<span class="fas fa-user" aria-hidden="true"></span>
-										<small class="mr-3">
-											Shemplo
-										</small>
-	
-										<span class="fas fa-users" aria-hidden="true"></span>
-										<small class="mr-3">
-											<span>21</span> members
-										</small>
-	
-										<span class="fas fa-unlock-alt" aria-hidden="true"></span>
-										<small class="mr-3">
-											join by invitation
-										</small>
-									</div>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-										bibendum nunc dapibus sagittis.</p>
-								</li>
-								<li class="list-group-item list-group-item-action">
-									<div class="d-flex justify-content-between">
-										<h5>Group #1</h5>
-										<div>
-											<button class="btn btn-sm btn-link">
-												<span class="fas fa-info"></span>
-											</button>
-										</div>
-									</div>
-									<div class="text-secondary mb-1">
-										<span class="fas fa-calendar-day" aria-hidden="true"></span>
-										<small class="mr-3">
-											29.07.2019
-										</small>
-	
-										<span class="fas fa-paw" aria-hidden="true"></span>
-										<small class="mr-3">
-											elimination
-										</small>
-	
-										<span class="fas fa-user" aria-hidden="true"></span>
-										<small class="mr-3">
-											Shemplo
-										</small>
-	
-										<span class="fas fa-users" aria-hidden="true"></span>
-										<small class="mr-3">
-											<span>316</span> members
-										</small>
-	
-										<span class="fas fa-unlock-alt" aria-hidden="true"></span>
-										<small class="mr-3">
-											free to join
-										</small>
-									</div>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt erat
-										bibendum nunc dapibus sagittis.</p>
-								</li>
-							</ul>
-						</div>
-	
-						<div class="col">
-							<div class="d-flex mb-2">
-								<button class="btn btn-sm btn-outline-secondary">
-									<i class="fas fa-sync mr-2" aria-hidden="true"></i>
-									Reload groups list
-								</button>
-							</div>
-	
-							<div class="d-flex mb-4">
-								<button class="btn btn-sm btn-outline-secondary">
-									<i class="fas fa-archive mr-2" aria-hidden="true"></i>
-									Open archive
-								</button>
-							</div>
-	
-							<div class="d-flex mb-2">
-								<button class="btn btn-sm btn-outline-success">
-									<i class="fas fa-plus mr-2" aria-hidden="true"></i>
-									Create new group
-								</button>
-							</div>
+						<div class="spinner-grow text-primary ml-2" 
+							id="groups-wall-spinner">
 						</div>
 					</div>
+	
+					<c:choose>
+						<c:when test="${have_access_to_groups}">
+							<div class="row mb-5">
+								<div class="col-9">
+									<div class="text-left p-2">
+										<span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
+									</div>
+									<ul class="list-group" id="groups-wall"></ul>
+								</div>
+			
+								<div class="col">
+									<div class="d-flex mb-2">
+										<button class="btn btn-sm btn-outline-secondary">
+											<i class="fas fa-sync mr-2" aria-hidden="true"></i>
+											Reload groups list
+										</button>
+									</div>
+			
+									<div class="d-flex mb-4">
+										<button class="btn btn-sm btn-outline-secondary">
+											<i class="fas fa-archive mr-2" aria-hidden="true"></i>
+											Open archive
+										</button>
+									</div>
+			
+									<div class="d-flex mb-2">
+										<button class="btn btn-sm btn-outline-success">
+											<i class="fas fa-plus mr-2" aria-hidden="true"></i>
+											Create new group
+										</button>
+									</div>
+								</div>
+							</div>
+						</c:when>
+
+						<c:otherwise>
+							<div>You don't have enough rights to see list of groups</div>
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 		</main>

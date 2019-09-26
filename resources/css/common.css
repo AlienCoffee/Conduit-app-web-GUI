@@ -18,8 +18,12 @@ body {
     width: 20px;
 }
 
-.cursor-pointer{
+.cursor-pointer {
     cursor: pointer;
+}
+
+.cursor-none {
+    cursor: none;
 }
 
 
