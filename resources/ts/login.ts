@@ -1,4 +1,4 @@
-import { UserProfile } from "./components/plofile-component";
+import { UserProfile } from "./components/base/plofile-component";
 
 //
 // (c) Shemplo
@@ -7,5 +7,5 @@ import { UserProfile } from "./components/plofile-component";
 export let up : UserProfile;
 
 window.onload = function () {
-    up = new UserProfile ();
+    up = new UserProfile ().init ();
 }

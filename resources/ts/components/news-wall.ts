@@ -1,14 +1,11 @@
-import { LoadingComponent } from "./loading-component";
 import { BlogPost, ResponseBox } from "../bridge/gen-dtos";
 import { GetController } from "../bridge/gen-apis";
 import { compareDates, element } from "../common";
 import { makeBlogPostElement } from "../bridge/gen-htmls";
 import { DateUtils } from "../utils/date";
+import { LoadingWallComponent } from "./base/loading-wall-component";
 
-export class NewsWall extends LoadingComponent <BlogPost []> {
-
-    protected nonthingDiv    : HTMLDivElement;
-    protected wallDiv        : HTMLDivElement;
+export class NewsWall extends LoadingWallComponent <BlogPost []> {
     
     protected loadMoreButton : HTMLButtonElement;
     protected loadMore       : HTMLUListElement;
@@ -16,19 +13,16 @@ export class NewsWall extends LoadingComponent <BlogPost []> {
     constructor (
         protected updateInterval : number = null
     ) {
-        super (updateInterval);
+        super ("news", updateInterval);
     }
 
-    public init (): void {
+    public init () : NewsWall {
         this.loadMoreButton = element ("news-wall-more-button");
         this.loadMoreButton.onclick = () => this.loadMorePosts ();
-
-        this.nonthingDiv = element ("news-wall-nothing");
         this.loadMore = element ("news-wall-more");
-        this.spinner = element ("news-wall-spinner");
-        this.wallDiv = element ("news-wall");
-
-        this.reloadData ();
+        
+        super.init ();
+        return this;
     }
 
     public makeRequest () : Promise <ResponseBox <BlogPost []>> {
@@ -81,9 +75,9 @@ export class NewsWall extends LoadingComponent <BlogPost []> {
         post.html = postDiv;
 
         if (next != null) {
-            this.wallDiv.insertBefore (postDiv, next.html);
+            this.wall.insertBefore (postDiv, next.html);
         } else {
-            this.wallDiv.prepend (postDiv);
+            this.wall.prepend (postDiv);
         }
     }
 

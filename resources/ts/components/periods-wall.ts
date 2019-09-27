@@ -1,32 +1,27 @@
-import { LoadingComponent } from "./loading-component";
 import { ResponseBox, PeriodEntity, PeriodStatus } from "../bridge/gen-dtos";
 import { GetController } from "../bridge/gen-apis";
 import { compareDates, element } from "../common";
 import { makePeriodListElement } from "../bridge/gen-htmls";
 import { DateUtils } from "../utils/date";
 import { WarningPopupTile } from "../popup";
+import { LoadingWallComponent } from "./base/loading-wall-component";
 
-export class PeriodsWall extends LoadingComponent <PeriodEntity []> {
+export class PeriodsWall extends LoadingWallComponent <PeriodEntity []> {
 
     protected updateButton : HTMLButtonElement; 
-    protected wallUL       : HTMLUListElement;
-    protected nonthingDiv  : HTMLDivElement;
 
     constructor (
         protected updateInterval : number = null,
     ) {
-        super (updateInterval);
+        super ("periods", updateInterval);
     }
 
-    public init (): void {
+    public init () : PeriodsWall {
         this.updateButton = element ("periods-wall-update");
         this.updateButton.onclick = () => this.reloadData ();
 
-        this.nonthingDiv = element ("periods-wall-nothing");
-        this.spinner = element ("periods-wall-spinner");
-        this.wallUL = element ("periods-wall");
-
-        this.reloadData ();
+        super.init ();
+        return this;
     }
 
     public makeRequest (): Promise<ResponseBox <PeriodEntity []>> {
@@ -100,9 +95,9 @@ export class PeriodsWall extends LoadingComponent <PeriodEntity []> {
         period.html = periodLI;
 
         if (next != null) {
-            this.wallUL.insertBefore (periodLI, next.html);
+            this.wall.insertBefore (periodLI, next.html);
         } else {
-            this.wallUL.prepend (periodLI);
+            this.wall.prepend (periodLI);
         }
     }
 

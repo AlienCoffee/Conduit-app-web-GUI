@@ -2,9 +2,9 @@
 
 export abstract class AbstractComponent {
 
-    constructor () { this.init (); }
+    constructor () {}
 
-    public abstract init () : void;
+    public abstract init () : AbstractComponent;
 
     public abstract destroy () : void;
 

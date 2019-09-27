@@ -1,9 +1,10 @@
 import { element, inputElement } from "./common";
 import { CreateController } from "./bridge/gen-apis";
-import { LoadingComponent } from "./components/loading-component";
+import { LoadingComponent } from "./components/base/loading-component";
 import { ResponseBox } from "./bridge/gen-dtos";
 import { Enum, EnumType } from "../lib/jenum";
 import { InfoPopupTile } from "./popup";
+import { NetworkError } from "./network";
 
 //
 // (c) Shemplo
@@ -12,7 +13,7 @@ import { InfoPopupTile } from "./popup";
 export let ur : UserRegistration;
 
 window.onload = function () {
-    ur = new UserRegistration ();
+    ur = new UserRegistration ().init ();
 }
 
 export class UserRegistration extends LoadingComponent <void> {
@@ -20,7 +21,8 @@ export class UserRegistration extends LoadingComponent <void> {
     // TODO: add handler on reset verification code button
 
     private regButtonNotice : HTMLSpanElement;
-    private regButton  : HTMLButtonElement;
+    private regButton : HTMLButtonElement;
+    protected spinner : HTMLDivElement;
 
     private regSecretContainer : HTMLDivElement;
     private regPasswordRandom : HTMLButtonElement;
@@ -35,7 +37,7 @@ export class UserRegistration extends LoadingComponent <void> {
     private verificationAttempt = 0;
     private state : UserRegState;
 
-    public init (): void {
+    public init () : UserRegistration {
         this.state = UserRegState.FIELDS_FILLING;
 
         this.regButtonNotice = element ("reg-button-notice");
@@ -75,9 +77,12 @@ export class UserRegistration extends LoadingComponent <void> {
         this.regSecretContainer.classList.remove ("d-none");
 
         this.updateForm ();
+        return this;
     }
 
     public makeRequest (descriptor : string): Promise <ResponseBox <void>> {
+        if (this.spinner) { $(this.spinner).show (); }
+
         let password = this.regPassword.value;
         let secret = this.regSecret.value;
         let login = this.regLogin.value;
@@ -88,6 +93,10 @@ export class UserRegistration extends LoadingComponent <void> {
         } else if (descriptor === UserRegState.FIELDS_FILLING.value) {
             return CreateController.createUser (login, phone, password);
         }
+    }
+
+    public onRequestFinised () : void {
+        if (this.spinner) { $(this.spinner).hide (); }
     }
 
     public handleResponse (response: ResponseBox <void>, descriptor : string): void {

@@ -120,9 +120,13 @@
 						<c:when test="${have_access_to_groups}">
 							<div class="row mb-5">
 								<div class="col-9">
-									<div class="text-left p-2">
-										<span>Hm. Seems to be nothing here. Maybe here will appear something soon...</span>
+									<div class="text-left p-2" id="groups-wall-nothing">
+										<span>
+											Hm. Seems to be nothing here. 
+											Maybe here will appear something soon...
+										</span>
 									</div>
+									
 									<ul class="list-group" id="groups-wall"></ul>
 								</div>
 			

@@ -1,12 +1,11 @@
 import { AbstractComponent } from "./abstract-component";
-import { NetworkError } from "../network";
-import { ErrorPopupTile } from "../popup";
-import { ResponseBox } from "../bridge/gen-dtos";
+import { NetworkError } from "../../network";
+import { ErrorPopupTile } from "../../popup";
+import { ResponseBox } from "../../bridge/gen-dtos";
 
 export abstract class LoadingComponent <T> extends AbstractComponent {
 
     protected intervalDesc : NodeJS.Timeout = null;
-    protected spinner      : HTMLDivElement;
 
     protected data : T;
 
@@ -27,23 +26,17 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
     }
 
     public reloadData (descriptor? : string) {
-        if (this.spinner) { $(this.spinner).show (); }
         this.makeRequest (descriptor).then (res => {
-            if (this.spinner) { $(this.spinner).hide (); }
+            this.onRequestFinised (descriptor);
             this.handleResponse (res, descriptor);
         }).catch ((rej : NetworkError) => {
-            if (this.spinner) { $(this.spinner).hide (); }
-
-            if (rej instanceof NetworkError && !rej.isSystem ()) {
-                var comment = rej.getComment (), message = rej.message;
-                var tile = new ErrorPopupTile (5, message, comment);
-                tile.show ();
-            } else { console.log (rej); }
+            this.onRequestFinised (descriptor);
+            this.handleError (rej, descriptor);
         });
     }
 
-    protected checkErrorsAndDo <CT> (response : ResponseBox <CT>, 
-            callback : (content : CT) => void) {
+    protected checkErrorsAndDo <T> (response : ResponseBox <T>, 
+            callback : (content : T) => void) : void {
         if (response && !response.error) {
             callback (response.object);
         } else if (response && response.error) {
@@ -54,7 +47,17 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
 
     public abstract makeRequest (descriptor? : string) : Promise <ResponseBox <T>>;
 
+    public abstract onRequestFinised (descriptor? : string) : void;
+
     public abstract handleResponse (response : ResponseBox <T>, descriptor? : string) : void;
+
+    public handleError (error : NetworkError, descriptor? : string) : void {
+        if (error instanceof NetworkError && !error.isSystem ()) {
+            var comment = error.getComment (), message = error.message;
+            var tile = new ErrorPopupTile (5, message, comment);
+            tile.show ();
+        } else { console.log (error); }
+    }
 
     protected mergeData (receivedData : T, force : boolean) {
         if (this.data == null || force) {

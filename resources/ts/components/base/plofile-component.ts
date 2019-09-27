@@ -1,7 +1,7 @@
 import { AbstractComponent } from "./abstract-component";
-import { element, inputElement } from "../common";
-import { sendRequest, NetworkError, catchErrorWithSpinner } from "../network";
-import { ErrorPopupTile } from "../popup";
+import { element, inputElement } from "../../common";
+import { sendRequest, NetworkError, catchErrorWithSpinner } from "../../network";
+import { ErrorPopupTile } from "../../popup";
 
 export class UserProfile extends AbstractComponent {
 
@@ -16,7 +16,7 @@ export class UserProfile extends AbstractComponent {
 
     protected logoutButton : HTMLButtonElement;
 
-    public init (): void {
+    public init () : UserProfile {
         this.isAuthorizedE = inputElement ("user-profile-authorized");
         this.isAuthorized = JSON.parse (this.isAuthorizedE.value);
         this.spinner = element ("user-profile-spinner");
@@ -44,6 +44,8 @@ export class UserProfile extends AbstractComponent {
 
             setTimeout (() => this.updateForm (), 1500);
         }
+
+        return this;
     }    
 
     private updateForm () {
