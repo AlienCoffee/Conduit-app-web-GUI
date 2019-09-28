@@ -3,6 +3,7 @@ import { element } from "../../common";
 
 export abstract class LoadingWallComponent <T> extends LoadingComponent <T> {
 
+    protected updateButton : HTMLButtonElement; 
     protected nonthingDiv : HTMLDivElement;
     protected spinner : HTMLDivElement;
     protected wall : HTMLElement;
@@ -15,6 +16,18 @@ export abstract class LoadingWallComponent <T> extends LoadingComponent <T> {
     }
 
     public init () : LoadingWallComponent <T> {
+        this.updateButton = element (this.componentName + "-wall-update");
+        if (this.updateButton) {
+            this.updateButton.onclick = () => {
+                this.updateButton.setAttribute ("disabled", "");
+                setTimeout (() => { // to prevent too frequent updates
+                    this.updateButton.removeAttribute ("disabled");
+                }, 1000);
+
+                this.reloadData ()
+            };
+        }
+
         this.nonthingDiv = element (this.componentName + "-wall-nothing");
         this.spinner = element (this.componentName + "-wall-spinner");
         this.wall = element (this.componentName + "-wall");

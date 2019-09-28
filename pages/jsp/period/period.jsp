@@ -33,7 +33,9 @@
 				<jsp:include page="../left-side-bar.jsp" />
 
 				<div class="col-9">
-					<h2>${period.getName ()}</h2>
+					<div class="d-flex justify-content-start align-items-center mt-4 ml-1">
+                        <h2>${period.getName ()}</h2>
+                    </div>
 	
 					<div class="text-secondary">
 						<span data-toggle="tooltip" data-placement="bottom" title="Issued date"
@@ -132,7 +134,8 @@
 			
 								<div class="col">
 									<div class="d-flex mb-2">
-										<button class="btn btn-sm btn-outline-secondary">
+										<button class="btn btn-sm btn-outline-secondary"
+												id="groups-wall-update">
 											<i class="fas fa-sync mr-2" aria-hidden="true"></i>
 											Reload groups list
 										</button>

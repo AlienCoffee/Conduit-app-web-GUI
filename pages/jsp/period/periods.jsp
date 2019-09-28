@@ -35,7 +35,6 @@
 						<div class="spinner-grow text-primary ml-2" 
 							id="periods-wall-spinner"></div>
                     </div>
-
 					
 					<div class="row mb-5">
 						<div class="col-9">

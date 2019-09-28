@@ -1,8 +1,8 @@
 import { UserProfile } from "./components/base/plofile-component"
 import { GroupsWall } from "./components/groups-wall.component";
 
-let up : UserProfile;
-let gw : GroupsWall;
+export let up : UserProfile;
+export let gw : GroupsWall;
 
 window.onload = function () {
     up = new UserProfile ().init ();

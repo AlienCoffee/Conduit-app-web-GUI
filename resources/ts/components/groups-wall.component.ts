@@ -2,6 +2,9 @@ import { ResponseBox, GroupEntity } from "../bridge/gen-dtos";
 import { element, inputElement } from "../common";
 import { GetController } from "../bridge/gen-apis";
 import { LoadingWallComponent } from "./base/loading-wall-component";
+import { makeGroupListElement } from "../bridge/gen-htmls";
+import { DateUtils } from "../utils/date";
+import { WarningPopupTile } from "../popup";
 
 export class GroupsWall extends LoadingWallComponent <GroupEntity []> {
     
@@ -18,6 +21,7 @@ export class GroupsWall extends LoadingWallComponent <GroupEntity []> {
         this.groupsAccess = inputElement ("groups-wall-access").value === "true";
         this.periodId = +inputElement ("period-id").value;
         if (this.groupsAccess) { super.init (); }
+
         return this;
     }
 
@@ -45,8 +49,30 @@ export class GroupsWall extends LoadingWallComponent <GroupEntity []> {
         });
     }
 
-    private renderGroupEntity (period : GroupEntity, index : number, next : GroupEntity) {
-        //
+    private renderGroupEntity (group : GroupEntity, index : number, next : GroupEntity) {
+        let published = DateUtils.format (new Date (), true);
+        let groupLI = makeGroupListElement ("" + group.id, group.name, published, 
+            group.type._name, "author", "members", group.joinType.name, 
+            group.description);
+        groupLI.onclick = function () {
+            let gidHolder = $(groupLI).find ("input[type=hidden]") 
+                            [0] as HTMLInputElement;
+                            
+            if (gidHolder) {
+                location.href = "/group/" + gidHolder.value;
+            } else {
+                new WarningPopupTile (3, "Element missed", 
+                    "Period ID holder element not found")
+                    .show ();
+            }
+        }
+        group.html = groupLI;
+
+        if (next != null) {
+            this.wall.insertBefore (groupLI, next.html);
+        } else {
+            this.wall.prepend (groupLI);
+        }
     }
 
 }

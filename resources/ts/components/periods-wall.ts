@@ -8,21 +8,13 @@ import { LoadingWallComponent } from "./base/loading-wall-component";
 
 export class PeriodsWall extends LoadingWallComponent <PeriodEntity []> {
 
-    protected updateButton : HTMLButtonElement; 
-
     constructor (
         protected updateInterval : number = null,
     ) {
         super ("periods", updateInterval);
     }
 
-    public init () : PeriodsWall {
-        this.updateButton = element ("periods-wall-update");
-        this.updateButton.onclick = () => this.reloadData ();
-
-        super.init ();
-        return this;
-    }
+    public init () { super.init (); return this; }
 
     public makeRequest (): Promise<ResponseBox <PeriodEntity []>> {
         return GetController.getAvailablePeriods (null);
@@ -83,7 +75,9 @@ export class PeriodsWall extends LoadingWallComponent <PeriodEntity []> {
             period.author.login, since + " - " + until, period.status.name, 
             period.description);
         periodLI.onclick = function () {
-            let pidHolder = $(periodLI).find ("input[type=hidden]") [0] as HTMLInputElement;
+            let pidHolder = $(periodLI).find ("input[type=hidden]") 
+                            [0] as HTMLInputElement;
+                            
             if (pidHolder) {
                 location.href = "/period/" + pidHolder.value;
             } else {
