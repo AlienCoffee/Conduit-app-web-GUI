@@ -39,10 +39,10 @@
                     </div>
 
 					<div>
-						<a class="btn btn-sm btn-outline-secondary"
+						<a class="btn btn-sm btn-outline-secondary ml-1"
 								href="/period/${period.getId ()}">
 							<span class="fas fa-arrow-left mr-2"></span>
-							<span>to period page</span>
+							<span>back to period page</span>
 						</a>
 					</div>
 
@@ -53,30 +53,38 @@
 									<span class="fas fa-user mx-2"></span>
 									Choose role to register for:
 								</label>
-								<select class="form-control" id="reg-role-select">
-									<option>Student</option>
-									<option>Teacher</option>
-									<option>Org. committee</option>
-									<option>Parent</option>
+								<select class="form-control" 
+									id="reg-role-select">
 								</select>
 							</div>
 		
-							<p>
-								You did not register for this period yet.
-							</p>
-							<div class="d-flex mb-3">
-								<span>You have already registered for roles: </span>
-								<div class="ml-2">
-									<mark>Teacher</mark>,
-									<mark>Org. committee</mark>
-								</div>.
-							</div>
+							<c:choose>
+								<c:when test="${have_assigned_roles}">
+									<div class="d-flex">
+										<span>You have already registered for roles: </span>
+										<!--
+										<div class="ml-2">
+											<mark>Teacher</mark>,
+											<mark>Org. committee</mark>
+										</div>.
+										-->
+									</div>
+								</c:when>
+
+								<c:otherwise>
+									<div>
+										You did not register for this period yet.
+									</div>
+								</c:otherwise>
+							</c:choose>
 		
-							<h4 class="mt-5">
-								Registration for <mark>Student</mark> role
+							<h4 class="mt-5 hidden" id="reg-title">
+								Registration for 
+								<mark id="reg-form-role"></mark> 
+								role
 							</h4>
 		
-							<form class="container mt-3 mb-5">
+							<form class="container mt-3 mb-5 hidden" id="reg-form">
 								<h5>
 									<span class="fas fa-address-card mx-2 my-3"></span>
 									Personal data

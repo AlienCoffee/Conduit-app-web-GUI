@@ -22,7 +22,7 @@ export function sendRequest <T extends ResponseBox <any>> (method : string,
 
         descriptor.onreadystatechange = function () {
             if (descriptor.readyState != 4) { return; }
-            console.log (descriptor);
+            //console.log (descriptor);
 
             let responseText = descriptor.responseText;
             try {

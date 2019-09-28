@@ -84,7 +84,7 @@
 		
 								<a href="/period/${period.getId ()}/reg" 
 										class="btn btn-sm btn-primary">
-									Register right now
+									Register now
 								</a>
 							</div>
 
