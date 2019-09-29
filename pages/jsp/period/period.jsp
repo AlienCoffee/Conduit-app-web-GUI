@@ -92,19 +92,16 @@
 								<c:when test="${have_assigned_roles}">
 									<div class="d-flex">
 										<span>You have already registered for roles: </span>
-										<!--
 										<div class="ml-2">
-											<mark>Teacher</mark>,
-											<mark>Org. committee</mark>
-										</div>.
-										-->
+											<c:forEach var="role" items="${role_applications}">
+												<mark>${role.getTemplate ().getName ()}</mark>
+											</c:forEach>
+										</div>
 									</div>
 								</c:when>
 
 								<c:otherwise>
-									<div>
-										You did not register for this period yet.
-									</div>
+									<div>You did not register for this period yet.</div>
 								</c:otherwise>
 							</c:choose>
 						</div>

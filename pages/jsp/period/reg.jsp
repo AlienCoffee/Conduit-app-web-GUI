@@ -62,12 +62,11 @@
 								<c:when test="${have_assigned_roles}">
 									<div class="d-flex">
 										<span>You have already registered for roles: </span>
-										<!--
 										<div class="ml-2">
-											<mark>Teacher</mark>,
-											<mark>Org. committee</mark>
-										</div>.
-										-->
+											<c:forEach var="role" items="${role_applications}">
+												<mark>${role.getTemplate ().getName ()}</mark>
+											</c:forEach>
+										</div>
 									</div>
 								</c:when>
 
@@ -84,144 +83,7 @@
 								role
 							</h4>
 		
-							<form class="container mt-3 mb-5 hidden" id="reg-form">
-								<h5>
-									<span class="fas fa-address-card mx-2 my-3"></span>
-									Personal data
-								</h5>
-		
-								<div class="container">
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Last name</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">First name</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Second name</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Birthday</span>
-											</div>
-											<input type="date" class="form-control" id="first-name">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Gender</span>
-											</div>
-											<select class="form-control">
-												<option>Male</option>
-												<option>Female</option>
-											</select>
-										</div>
-									</div>
-								</div>
-		
-								<h5>
-									<span class="fas fa-id-card mx-2 my-3"></span>
-									ID document
-								</h5>
-		
-								<div class="container">
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Type</span>
-											</div>
-											<select class="form-control">
-												<option>Passport</option>
-												<option>Birth sertificate</option>
-											</select>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Series</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Number</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">...</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-								</div>
-		
-								<h5>
-									<span class="fas fa-home mx-2 my-3"></span>
-									Living place
-								</h5>
-		
-								<div class="container">
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">Region</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="input-group input-group-sm">
-											<div class="input-group-prepend">
-												<span class="input-group-text" style="width: 100px;">City / Town</span>
-											</div>
-											<input type="text" class="form-control" id="first-name">
-										</div>
-									</div>
-								</div>
-		
-								<h5>
-									<span class="fas fa-handshake mx-2 my-3"></span>
-									Almost done
-								</h5>
-		
-								<div class="container">
-									<div class="form-check-inline">
-										<label class="form-check-label">
-											<input type="checkbox" class="form-check-input" value="">
-											Consent to the processing of personal data
-											(<a href="#">conditions</a>)
-										</label>
-									</div>
-								</div>
-		
-								<div class="container d-flex justify-content-end mt-3">
-									<button class="btn btn-sm btn-primary">Register</button>
-								</div>
-							</form>
+							<form class="container mt-3 mb-5 hidden" id="reg-form"></form>
 						</c:when>
 
 						<c:otherwise>

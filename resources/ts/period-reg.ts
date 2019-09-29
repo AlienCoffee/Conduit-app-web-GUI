@@ -27,6 +27,9 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
 
     protected formData : Map <string, string> = new Map ();
     protected roles : Map <string, WebFormRow []>;
+    
+    protected personalData : Map <string, Object>;
+    protected personalDataSet = false;
 
     public init () : UserPeriodRegistration { 
         this.periodId = +inputElement ("period-id").value;
@@ -77,9 +80,14 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
                 this.roles = res as Map <string, WebFormRow []>;
                 this.updateRolesSelection ();
             } else if (descriptor == RegFormRequest.PERSONAL_DATA.value) {
-                let obj = res as Map <string, Object>;
+                this.personalData = res as Map <string, Object>;
+                this.personalDataSet = false;
+                if (this.regRoleSelec.value != "null" 
+                        && this.regRoleSelec.value) {
+                    this.updateForm ();
+                }
             } else if (descriptor == RegFormRequest.REGISTER.value) {
-
+                location.reload ();
             }
         });
     }
@@ -104,6 +112,7 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
 
     private generateForm () : void {
         let role = this.regRoleSelec.value;
+        this.personalDataSet = false;
         this.formData.clear ();
 
         if (role == "null") {
@@ -111,7 +120,7 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
             $(this.regForm).hide ();
             return;
         } 
-
+        
         this.regFormRole.innerHTML = role;
         clearChildren (this.regForm);
 
@@ -163,8 +172,17 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
 
         let registerRow = document.createElement ("div");
         registerRow.classList.add ("container", "d-flex", 
-            "justify-content-end", "mt-3");
+            "justify-content-end", "align-items-center", 
+            "mt-3");
         this.regForm.appendChild (registerRow);
+
+        if (this.personalData && this.personalData.size > 0) {
+            let registerInfo = document.createElement ("div");
+            registerInfo.classList.add ("small", "mr-2", "text-info");
+            registerInfo.innerHTML = "If you are already registered for this role" 
+                                   + " then <b>data will be updated</b>"
+            registerRow.appendChild (registerInfo);
+        }
 
         let registerButton = document.createElement ("button");
         registerButton.classList.add ("btn", "btn-sm", "btn-primary");
@@ -202,14 +220,36 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
         let className = "web-form-element";
         let agreed = false;
 
+        let setAtLeastOne = false;
         for (let elem of this.regForm.getElementsByClassName (className)) {
             let telem = elem as HTMLInputElement; // typed element
+            if (!this.personalDataSet && this.personalData) {
+                let value = this.personalData.has (telem.name) 
+                          ? this.personalData.get (telem.name) 
+                          : "";
+                if (elem instanceof HTMLSelectElement) {
+                    for (let opt of elem.getElementsByTagName ("option")) {
+                        if (opt.value == value) {
+                            opt.selected = true;
+                            console.log (opt);
+                            break;
+                        }
+                    }
+                } else {
+                    telem.value = "" + value;
+                }
+                setAtLeastOne = true;
+            }
 
             if (telem.name == this.agreeCheckboxName) {
                 agreed = telem.checked;
             } else if (telem.value && telem.value.length > 0) {
                 this.formData.set (telem.name, telem.value);
             }
+        }
+
+        if (setAtLeastOne) {
+            this.personalDataSet = true;
         }
 
         if (agreed) {
