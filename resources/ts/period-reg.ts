@@ -1,9 +1,10 @@
 import { UserProfile } from "./components/base/plofile-component"
 import { LoadingComponent } from "./components/base/loading-component";
 import { ResponseBox, WebFormRow } from "./bridge/gen-dtos";
-import { GetController } from "./bridge/gen-apis";
+import { GetController, CreateController } from "./bridge/gen-apis";
 import { inputElement, element, clearChildren, Pair } from "./common";
 import { makeWebFormTitleElement, makeWebFormFieldElement, makeWebFormSelectElement, makeWebFormAgreeElement } from "./bridge/gen-htmls";
+import { Enum, EnumType } from "../lib/jenum";
 
 export let upr : UserPeriodRegistration;
 export let up : UserProfile;
@@ -24,6 +25,7 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
     protected periodId : number;
     protected userId : number;
 
+    protected formData : Map <string, string> = new Map ();
     protected roles : Map <string, WebFormRow []>;
 
     public init () : UserPeriodRegistration { 
@@ -34,7 +36,7 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
         if (this.spinner) { $(this.spinner).hide (); }
 
         this.regRoleSelec = element ("reg-role-select");
-        this.regRoleSelec.onchange = () => this.updateForm ();
+        this.regRoleSelec.onchange = () => this.generateForm ();
 
         this.regFormRole = element ("reg-form-role");
         this.regTitle = element ("reg-title");
@@ -44,18 +46,22 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
         $(this.regForm).hide ();
         this.regForm.classList.remove ("hidden");
 
-        this.reloadData ("personal-data");
-        this.reloadData ("roles");
+        this.reloadData (RegFormRequest.PERSONAL_DATA.value);
+        this.reloadData (RegFormRequest.ROLES.value);
         return this; 
     }
 
     public makeRequest (descriptor? : string) : Promise <ResponseBox <any>> {
         if (this.spinner) { $(this.spinner).show (); }
 
-        if (descriptor == "roles") {
+        if (descriptor == RegFormRequest.ROLES.value) {
             return GetController.getPeriodRegisterRoles ();
-        } else if (descriptor == "personal-data") {
+        } else if (descriptor == RegFormRequest.PERSONAL_DATA.value) {
             return GetController.getPersonalData (this.periodId, this.userId);
+        } else if (descriptor == RegFormRequest.REGISTER.value) {
+            let template = this.regRoleSelec.value;
+            return CreateController.createPeriodRegistration (template, 
+                this.periodId, this.formData);
         }
 
         return null;
@@ -67,12 +73,13 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
 
     public handleResponse (response : ResponseBox <any>, descriptor? : string) : void {
         this.checkErrorsAndDo (response, res => {
-            if (descriptor == "roles") {
+            if (descriptor == RegFormRequest.ROLES.value) {
                 this.roles = res as Map <string, WebFormRow []>;
                 this.updateRolesSelection ();
-            } else if (descriptor == "personal-data") {
+            } else if (descriptor == RegFormRequest.PERSONAL_DATA.value) {
                 let obj = res as Map <string, Object>;
-                console.log (obj);
+            } else if (descriptor == RegFormRequest.REGISTER.value) {
+
             }
         });
     }
@@ -92,8 +99,13 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
         });
     }
 
-    private updateForm () : void {
+    private regFormButtonName = "reg-form-button";
+    private agreeCheckboxName = "regAgreement";
+
+    private generateForm () : void {
         let role = this.regRoleSelec.value;
+        this.formData.clear ();
+
         if (role == "null") {
             $(this.regTitle).hide ();
             $(this.regForm).hide ();
@@ -146,7 +158,7 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
         let agreeTitle = makeWebFormTitleElement ("fas fa-handshake", "Almost done");
         this.regForm.appendChild (agreeTitle);
 
-        let agreeRow = makeWebFormAgreeElement ();
+        let agreeRow = makeWebFormAgreeElement (this.agreeCheckboxName);
         this.regForm.appendChild (agreeRow);
 
         let registerRow = document.createElement ("div");
@@ -156,11 +168,80 @@ export class UserPeriodRegistration extends LoadingComponent <any> {
 
         let registerButton = document.createElement ("button");
         registerButton.classList.add ("btn", "btn-sm", "btn-primary");
+        registerButton.setAttribute ("data-placement", "bottom");
+        registerButton.setAttribute ("data-toggle", "tooltip");
+        registerButton.id = this.regFormButtonName;
         registerButton.innerHTML = "Register";
+        ($(registerButton) as any).tooltip ();
+        registerButton.onclick = event => {
+            this.reloadData (RegFormRequest.REGISTER.value);
+            event.preventDefault ();
+        };
         registerRow.appendChild (registerButton);
+
+        let className = "web-form-element";
+        for (let elem of this.regForm.getElementsByClassName (className)) {
+            let telem = elem as HTMLInputElement;
+
+            telem.onchange = () => this.updateForm ();
+            telem.onkeyup = () => this.updateForm ();
+        }
 
         $(this.regTitle).show ();
         $(this.regForm).show ();
+        this.updateForm ();
+    }
+
+    private updateForm () : void {
+        let registerButton = document.getElementById (this.regFormButtonName);
+        registerButton.setAttribute ("disabled", "");
+
+        let role = this.regRoleSelec.value;
+        this.formData.clear ();
+
+        let className = "web-form-element";
+        let agreed = false;
+
+        for (let elem of this.regForm.getElementsByClassName (className)) {
+            let telem = elem as HTMLInputElement; // typed element
+
+            if (telem.name == this.agreeCheckboxName) {
+                agreed = telem.checked;
+            } else if (telem.value && telem.value.length > 0) {
+                this.formData.set (telem.name, telem.value);
+            }
+        }
+
+        if (agreed) {
+            let enable = true;
+            this.roles.get (role).forEach (row => {
+                if (row.required) {
+                    if (enable && !this.formData.has (row.id)) {
+                        registerButton.title = "Missed value of required field: " 
+                                             + row.title;
+                        enable = false;
+                    }
+                }
+            });
+
+            if (enable) {
+                registerButton.removeAttribute ("disabled");
+                registerButton.title = "";
+            }
+        } else {
+            registerButton.title = "You have to accept our conditions";
+        }
     }
 
 }
+
+@Enum <RegFormRequest> ("value")
+class RegFormRequest extends EnumType <RegFormRequest> () {
+    
+    static readonly PERSONAL_DATA = new RegFormRequest ("personal-data");
+    static readonly REGISTER      = new RegFormRequest ("register"); 
+    static readonly ROLES         = new RegFormRequest ("roles");
+
+    private constructor (readonly value : string) { super (); }
+
+} 
