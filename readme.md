@@ -1,1 +1,1 @@
-## Web GUI for Conduit
+# Conduit :: Web interface
