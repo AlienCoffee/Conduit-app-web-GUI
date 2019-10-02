@@ -59,11 +59,11 @@
 							</div>
 		
 							<c:choose>
-								<c:when test="${have_assigned_roles}">
+								<c:when test="${have_registered_roles}">
 									<div class="d-flex">
 										<span>You have already registered for roles: </span>
 										<div class="ml-2">
-											<c:forEach var="role" items="${role_applications}">
+											<c:forEach var="role" items="${applicated_roles}">
 												<mark>${role.getTemplate ().getName ()}</mark>
 											</c:forEach>
 										</div>

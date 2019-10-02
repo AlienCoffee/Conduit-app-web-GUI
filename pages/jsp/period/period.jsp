@@ -70,6 +70,23 @@
 							</small>
 						</span>
 					</div>
+
+					<c:if test="${have_assigned_roles}">
+						<div class="small text-secondary">
+							<span data-toggle="tooltip" data-placement="bottom" title="Roles"
+									class="cursor-none">
+								<span class="fas fa-stamp" aria-hidden="true"></span>
+								<span class="ml-1">
+									<c:forEach var="role" items="${assigned_roles}">
+										<mark>${role.getTemplate ().getName ()}</mark>
+									</c:forEach>
+								</span>
+							</span>
+							- read more about 
+							<a href="#">roles</a> 
+							in period
+						</div>
+					</c:if>
 	
 					<p class="mt-2">
 						${period.getDescription ()}
@@ -89,11 +106,11 @@
 							</div>
 
 							<c:choose>
-								<c:when test="${have_assigned_roles}">
+								<c:when test="${have_registered_roles}">
 									<div class="d-flex">
 										<span>You have already registered for roles: </span>
 										<div class="ml-2">
-											<c:forEach var="role" items="${role_applications}">
+											<c:forEach var="role" items="${applicated_roles}">
 												<mark>${role.getTemplate ().getName ()}</mark>
 											</c:forEach>
 										</div>
@@ -145,12 +162,22 @@
 										</button>
 									</div>
 			
-									<div class="d-flex mb-2">
+									<div class="d-flex mb-4">
 										<button class="btn btn-sm btn-outline-success">
 											<i class="fas fa-plus mr-2" aria-hidden="true"></i>
 											Create new group
 										</button>
 									</div>
+
+									<!--
+									<div class="d-flex mb-4">
+										<p>Roles: </p>
+										<ul>
+											<li>Student</li>
+											<li>Teacher</li>
+										</ul>
+									</div>
+									-->
 								</div>
 							</div>
 						</c:when>

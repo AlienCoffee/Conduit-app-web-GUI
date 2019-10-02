@@ -22,6 +22,18 @@
            			</div>
            			
            			<ul class="nav flex-column mt-2 mb-3">
+						<li class="nav-item">
+			                <a class="nav-link text-danger" href="/admin">
+			                    <i class="fas fa-crown mr-2" aria-hidden="true"></i>
+			                    Administration
+			                </a>
+			            </li>
+						<li class="nav-item">
+			                <a class="nav-link text-danger" href="/office">
+			                    <i class="fas fa-paperclip mr-2" aria-hidden="true"></i>
+			                    Office panel
+			                </a>
+			            </li>
 			            <li class="nav-item">
 			                <a class="nav-link" href="/">
 			                    <i class="fas fa-wrench mr-2" aria-hidden="true"></i>
