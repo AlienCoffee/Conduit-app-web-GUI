@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/">
+                    <a class="nav-link" href="/office/periods">
                         <i class="fas fa-stream mr-2" aria-hidden="true"></i>
                         Periods
                     </a>
