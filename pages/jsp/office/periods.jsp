@@ -48,7 +48,8 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex align-items-start">
+                            <div class="d-flex align-items-start mt-2"
+                                    id="periods-table">
                                 <table class="table table-sm mt-2">
                                     <thead>
                                         <tr>

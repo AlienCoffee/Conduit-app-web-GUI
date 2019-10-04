@@ -15,6 +15,8 @@ export function inputElement <T extends HTMLInputElement> (id : string) : T {
 }
 
 export function clearChildren (element : HTMLElement) : void {
+    if (!element) { return; }
+    
     var iterations = element.children.length;
     for (var i = 0; i < iterations; i++) {
         element.children [0].remove ();
