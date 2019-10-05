@@ -1,7 +1,7 @@
 import { element, clearChildren } from "../../common";
 
 // Columns generator function type
-type CGFT <T> = (table : DataTable <T>) => DataTableColumn [];
+type CGFT <T> = (table : DataTable <T>) => DTC <T> [];
 
 export class DataTable <T> {
     
@@ -14,7 +14,8 @@ export class DataTable <T> {
     protected filtersRow : HTMLTableRowElement;
 
     protected columnsGenerator : CGFT <T>;
-    protected columns : DTC [];
+    protected columns : DTC <T> [];
+    protected data : T [];
 
     protected rowSelectionEnabled = false;
     protected rowFilteringEnabled = false;
@@ -35,6 +36,9 @@ export class DataTable <T> {
 
         this.headersTag = document.createElement ("thead");
         table.appendChild (this.headersTag);
+
+        this.bodyTag = document.createElement ("tbody");
+        table.appendChild (this.bodyTag);
 
         let settings = document.createElement ("div");
         settings.classList.add ("d-flex", "flex-column", "ml-2");
@@ -65,6 +69,8 @@ export class DataTable <T> {
     }
 
     public setData (data : T [], generateColumns : boolean = false) : DataTable <T> {
+        this.data = data;
+
         if (generateColumns && this.columnsGenerator) {
             this.columns = this.columnsGenerator (this);
         }
@@ -82,6 +88,8 @@ export class DataTable <T> {
         clearChildren (this.headersTag);
         clearChildren (this.bodyTag);
 
+        // header part
+
         let titles = document.createElement ("tr");
         this.headersTag.appendChild (titles);
 
@@ -97,7 +105,7 @@ export class DataTable <T> {
             this.filtersRow.appendChild (thF);
         }
 
-        for (let column of this.columns) {
+        for (let column of (this.columns ? this.columns : [])) {
             let thH = document.createElement ("th");
             thH.innerHTML = column.getTitle ();
             titles.appendChild (thH);
@@ -109,6 +117,29 @@ export class DataTable <T> {
                 input.classList.add ("form-control-plaintext", "form-control-sm");
                 input.placeholder = column.getPlaceholder ();
                 thF.appendChild (input);
+            }
+        }
+
+        // body part
+
+        for (let row of (this.data ? this.data : [])) {
+            let tr = document.createElement ("tr");
+            this.bodyTag.appendChild (tr);
+
+            if (this.rowSelectionEnabled) {
+                let td = document.createElement ("td");
+                tr.appendChild (td);
+
+                let checkbox = document.createElement ("input");
+                checkbox.type = "checkbox";
+                td.appendChild (checkbox);
+            }
+
+            for (let column of (this.columns ? this.columns : [])) {
+                let td = document.createElement ("td");
+                tr.appendChild (td);
+
+                td.innerHTML = column.getValue (row);
             }
         }
     }
@@ -125,9 +156,9 @@ export class DataTable <T> {
 
 }
 
-export type DTC = DataTableColumn;
+export type DTC <T> = DataTableColumn <T>;
 
-export class DataTableColumn {
+export class DataTableColumn <T> {
 
     protected _columnId : string;
 
@@ -143,7 +174,7 @@ export class DataTableColumn {
 
     protected _title : string;
 
-    setTitle (title : string) : DTC {
+    setTitle (title : string) : DTC <T> {
         this._title = title;
         return this;
     }
@@ -152,10 +183,10 @@ export class DataTableColumn {
         return this._title;
     }
 
+    protected _placeholder : string = null;
     protected _filterEnabled = false;
-    protected _placeholder = "";
 
-    enableFilter (placeholder? : string) : DTC {
+    enableFilter (placeholder? : string) : DTC <T> {
         if (placeholder) {
             this._placeholder = placeholder;
         }
@@ -169,7 +200,31 @@ export class DataTableColumn {
     }
 
     getPlaceholder () : string {
+        if (!this._placeholder) {
+            return this._columnId + " filter";
+        }
         return this._placeholder;
+    }
+
+    protected _valueFormatter : (value : string | number) => string;
+
+    setFormatter (formatter : (value : string | number) => string) : DTC <T> {
+        this._valueFormatter = formatter;
+        return this;
+    }
+
+    protected _valueRetriever : (row : T) => string | number;
+
+    setValue (value : (row : T) => string | number) : DTC <T> {
+        this._valueRetriever = value;
+        return this;
+    }
+
+    getValue (row : T, locale? : string) : string {
+        let value = this._valueRetriever ? this._valueRetriever (row) 
+                  : (row [this.getColumnId ()] as string | number);
+        return this._valueFormatter ? this._valueFormatter (value) 
+             : "" + value;
     }
 
 }

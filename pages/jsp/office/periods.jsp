@@ -42,80 +42,22 @@
                             </div>
 
                             <div class="d-flex justify-content-end">
+                                <div class="btn-group mr-2">
+                                    <button type="button" class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-plus mr-1" aria-hidden="true"></i>
+                                        dsn kfdsn dsm
+                                    </button>
+                                </div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-primary">Apple</button>
-                                    <button type="button" class="btn btn-sm btn-primary">Samsung</button>
+                                    <button type="button" class="btn btn-sm btn-success">
+                                        <i class="fas fa-plus mr-1" aria-hidden="true"></i>
+                                        New period
+                                    </button>
                                 </div>
                             </div>
 
                             <div class="d-flex align-items-start mt-2"
-                                    id="periods-table">
-                                <table class="table table-sm mt-2">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th>Name</th>
-                                            <th>Status</th>
-                                            <th>Author</th>
-                                            <th>Issued</th>
-                                            <th></th>
-                                        </tr>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th>
-                                                <input class="form-control-plaintext form-control-sm" 
-                                                    type="text" placeholder="name fiter" />
-                                            </th>
-                                            <th>
-                                                <input class="form-control-plaintext form-control-sm" 
-                                                    type="text" placeholder="status filter" />
-                                            </th>
-                                            <th>
-                                                <input class="form-control-plaintext form-control-sm" 
-                                                    type="text" placeholder="author filter" />
-                                            </th>
-                                            <th>
-                                                <input class="form-control-plaintext form-control-sm" 
-                                                    type="text" placeholder="issued filter" />
-                                            </th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><input type="checkbox" /></td>
-                                            <td></td>
-                                            <td>Period #2</td>
-                                            <td>Created</td>
-                                            <td>Shemplo</td>
-                                            <td>03.10.2019</td>
-                                            <td>
-                                                <i class="fas fa-star" aria-hidden="true"></i>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="checkbox" /></td>
-                                            <td></td>
-                                            <td>Period #1</td>
-                                            <td>Registration</td>
-                                            <td>Shemplo</td>
-                                            <td>03.10.2019</td>
-                                            <td>
-                                                <i class="fas fa-star" aria-hidden="true"></i>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="d-flex flex-column mt-2 ml-2">
-                                    <button class="btn btn-sm mb-2">
-                                        <i class="fas fa-filter" aria-hidden="true"></i>
-                                    </button>
-                                    <button class="btn btn-sm">
-                                        <i class="fas fa-sort" aria-hidden="true"></i>
-                                    </button>
-                                </div>
+                                id="periods-table">
                             </div>
                         </div>
         
