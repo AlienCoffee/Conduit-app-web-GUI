@@ -45,7 +45,7 @@
                                 <div class="btn-group mr-2">
                                     <button type="button" class="btn btn-sm btn-secondary">
                                         <i class="fas fa-plus mr-1" aria-hidden="true"></i>
-                                        dsn kfdsn dsm
+                                        [some text]
                                     </button>
                                 </div>
                                 <div class="btn-group">

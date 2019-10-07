@@ -139,7 +139,21 @@ export class DataTable <T> {
                 let td = document.createElement ("td");
                 tr.appendChild (td);
 
-                td.innerHTML = column.getValue (row);
+                if (column.isEditingEnabled ()) {
+                    td.classList.add ("p-relative");
+
+                    let value = document.createElement ("span");
+                    value.innerHTML = column.getValue (row);
+                    td.appendChild (value);
+
+                    let input = document.createElement ("input");
+                    input.classList.add ("form-control-plaintext", "form-control-sm", 
+                        "p-absolute", "t-0", "l-0");
+                    //input.placeholder = "...";
+                    td.appendChild (input);
+                } else {
+                    td.innerHTML = column.getValue (row);
+                }
             }
         }
     }
@@ -225,6 +239,17 @@ export class DataTableColumn <T> {
                   : (row [this.getColumnId ()] as string | number);
         return this._valueFormatter ? this._valueFormatter (value) 
              : "" + value;
+    }
+
+    protected _editingEnabled = false;
+
+    enableEditing () : DTC <T> {
+        this._editingEnabled = true;
+        return this;
+    }
+
+    isEditingEnabled () : boolean {
+        return this._editingEnabled;
     }
 
 }

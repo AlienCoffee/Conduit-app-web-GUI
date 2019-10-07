@@ -38,6 +38,22 @@ body {
     background-color: whitesmoke !important;
 }
 
+.p-absolute {
+    position: absolute !important;
+}
+
+.p-relative {
+    position: relative !important;
+}
+
+.t-0 {
+    top: 0 !important;
+}
+
+.l-0 {
+    left: 0 !important;
+}
+
 
 
 
