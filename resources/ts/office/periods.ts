@@ -20,5 +20,5 @@ window.onload = function () {
         return columns;
     });
 
-    table.setData ([{"name" : "hello"}], true);
+    table.setData ([{"name" : "hello"}, {"name" : "second row"}], true);
 }

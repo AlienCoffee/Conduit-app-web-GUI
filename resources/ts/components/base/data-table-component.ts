@@ -3,6 +3,9 @@ import { element, clearChildren } from "../../common";
 // Columns generator function type
 type CGFT <T> = (table : DataTable <T>) => DTC <T> [];
 
+// Cell click handler type
+type CCHT <T> = (event : CCE <T>) => boolean;
+
 export class DataTable <T> {
     
     protected baseDiv : HTMLDivElement;
@@ -10,6 +13,7 @@ export class DataTable <T> {
     protected headersTag : HTMLTableSectionElement;
     protected bodyTag : HTMLTableSectionElement;
     
+    protected cellEditEnableButton : HTMLButtonElement;
     protected filterEnableButton : HTMLButtonElement;
     protected filtersRow : HTMLTableRowElement;
 
@@ -19,6 +23,7 @@ export class DataTable <T> {
 
     protected rowSelectionEnabled = false;
     protected rowFilteringEnabled = false;
+    protected cellEditingEnabled = false;
 
     constructor (
         protected htmlID : string
@@ -61,6 +66,23 @@ export class DataTable <T> {
         sortButton.innerHTML = "<i class=\"fas fa-sort\" aria-hidden=\"true\"></i>";
         sortButton.classList.add ("btn", "btn-sm", "mb-2");
         settings.appendChild (sortButton);
+
+        this.cellEditEnableButton = document.createElement ("button");
+        this.cellEditEnableButton.innerHTML = 
+            "<i class=\"fas fa-pen\" aria-hidden=\"true\"></i>";
+        this.cellEditEnableButton.classList.add ("btn", "btn-sm", "mb-2");
+        settings.appendChild (this.cellEditEnableButton);
+
+        this.cellEditEnableButton.onclick = event => {
+            event.preventDefault ();
+
+            this.cellEditingEnabled = !this.cellEditingEnabled;
+            if (this.cellEditingEnabled) {
+                this.cellEditEnableButton.classList.add ("btn-secondary");
+            } else {
+                this.cellEditEnableButton.classList.remove ("btn-secondary");
+            }
+        };
     }
 
     public setColumnsGenerator (generator : CGFT <T>) : DataTable <T> {
@@ -122,12 +144,12 @@ export class DataTable <T> {
 
         // body part
 
-        for (let row of (this.data ? this.data : [])) {
-            let tr = document.createElement ("tr");
+        for (const row of (this.data ? this.data : [])) {
+            const tr = document.createElement ("tr");
             this.bodyTag.appendChild (tr);
 
             if (this.rowSelectionEnabled) {
-                let td = document.createElement ("td");
+                const td = document.createElement ("td");
                 tr.appendChild (td);
 
                 let checkbox = document.createElement ("input");
@@ -135,11 +157,12 @@ export class DataTable <T> {
                 td.appendChild (checkbox);
             }
 
-            for (let column of (this.columns ? this.columns : [])) {
-                let td = document.createElement ("td");
+            for (const column of (this.columns ? this.columns : [])) {
+                const td = document.createElement ("td");
+                td.onclick = event => this.cellClicked (event, row, column);
                 tr.appendChild (td);
 
-                if (column.isEditingEnabled ()) {
+                if (column.isEditingEnabled (row)) {
                     td.classList.add ("p-relative");
 
                     let value = document.createElement ("span");
@@ -151,6 +174,7 @@ export class DataTable <T> {
                         "p-absolute", "t-0", "l-0");
                     //input.placeholder = "...";
                     td.appendChild (input);
+                    $(input).hide ();
                 } else {
                     td.innerHTML = column.getValue (row);
                 }
@@ -165,6 +189,23 @@ export class DataTable <T> {
         } else {
             this.filterEnableButton.classList.remove ("btn-secondary");
             $(this.filtersRow).hide ();
+        }
+    }
+
+    private rowClicked (event : MouseEvent, row : T) {
+        console.log (event);
+    }
+
+    private cellClicked (event : MouseEvent, row : T, column : DTC <T>) {
+        let wrapper = new CellClickEvent (event, row, column);
+        let handler = column.getClickHandler ();
+
+        if (this.cellEditingEnabled && column.isEditingEnabled (row)) {
+            console.log (typeof event.target);
+        } else if (handler && handler (wrapper)) {
+            // event consumed and nothig will happen here
+        } else { // no handlers for cell event -> go to level up
+            this.rowClicked (event, row);
         }
     }
 
@@ -241,15 +282,38 @@ export class DataTableColumn <T> {
              : "" + value;
     }
 
-    protected _editingEnabled = false;
+    protected _editingEnabled : (row : T) => boolean;
 
-    enableEditing () : DTC <T> {
-        this._editingEnabled = true;
+    enableEditing (criteria? : (row : T) => boolean) : DTC <T> {
+        this._editingEnabled = criteria ? criteria : row => true;
         return this;
     }
 
-    isEditingEnabled () : boolean {
-        return this._editingEnabled;
+    isEditingEnabled (row : T) : boolean {
+        return this._editingEnabled (row);
     }
+
+    protected _cellClickHandler : CCHT <T>;
+
+    setClickHandler (handler : CCHT <T>) : DTC <T> {
+        this._cellClickHandler = handler;
+        return this;
+    }
+
+    getClickHandler () : CCHT <T> {
+        return this._cellClickHandler;
+    }
+
+}
+
+export type CCE <T> = CellClickEvent <T>;
+
+export class CellClickEvent <T> {
+
+    constructor (
+        private event : MouseEvent,
+        public readonly row : T,
+        public readonly column : DTC <T>
+    ) {}
 
 }
