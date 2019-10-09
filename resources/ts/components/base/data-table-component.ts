@@ -25,6 +25,8 @@ export class DataTable <T> {
     protected rowFilteringEnabled = false;
     protected cellEditingEnabled = false;
 
+    protected editor : TableEditorState <T>;
+
     constructor (
         protected htmlID : string
     ) {
@@ -33,6 +35,7 @@ export class DataTable <T> {
             throw new Error ("Failed to find table main DIV block");
         }
 
+        this.editor = new TableEditorState (this);
         clearChildren (this.baseDiv);
 
         let table = document.createElement ("table");
@@ -81,6 +84,7 @@ export class DataTable <T> {
                 this.cellEditEnableButton.classList.add ("btn-secondary");
             } else {
                 this.cellEditEnableButton.classList.remove ("btn-secondary");
+                this.editor.changeFocus (null, null, null, null);
             }
         };
     }
@@ -136,7 +140,8 @@ export class DataTable <T> {
             this.filtersRow.appendChild (thF);
             if (column.isFilterEnabled ()) {
                 let input = document.createElement ("input");
-                input.classList.add ("form-control-plaintext", "form-control-sm");
+                input.classList.add ("form-control-plaintext", 
+                    "form-control-sm", "px-1");
                 input.placeholder = column.getPlaceholder ();
                 thF.appendChild (input);
             }
@@ -171,7 +176,7 @@ export class DataTable <T> {
 
                     let input = document.createElement ("input");
                     input.classList.add ("form-control-plaintext", "form-control-sm", 
-                        "p-absolute", "t-0", "l-0");
+                        "p-absolute", "t-0", "l-0", "px-1");
                     //input.placeholder = "...";
                     td.appendChild (input);
                     $(input).hide ();
@@ -193,15 +198,29 @@ export class DataTable <T> {
     }
 
     private rowClicked (event : MouseEvent, row : T) {
-        console.log (event);
+        let wrapper = new RowClickEvent (event, row);
+        console.log (wrapper);
     }
 
     private cellClicked (event : MouseEvent, row : T, column : DTC <T>) {
         let wrapper = new CellClickEvent (event, row, column);
+        this.editor.changeFocus (null, null, row, column);
         let handler = column.getClickHandler ();
 
         if (this.cellEditingEnabled && column.isEditingEnabled (row)) {
-            console.log (typeof event.target);
+            let cell = wrapper.getTarget ();
+            while (cell && cell.tagName.toLowerCase () != "td") {
+                cell = cell.parentElement;
+            }
+
+            if (!cell) { // nothing to do when no element
+                return;
+            }
+
+            let input = cell.getElementsByTagName ("input") [0];
+            let value = cell.getElementsByTagName ("span") [0];
+
+            this.editor.changeFocus (value, input, row, column);
         } else if (handler && handler (wrapper)) {
             // event consumed and nothig will happen here
         } else { // no handlers for cell event -> go to level up
@@ -282,15 +301,31 @@ export class DataTableColumn <T> {
              : "" + value;
     }
 
-    protected _editingEnabled : (row : T) => boolean;
+    protected _editingEnabled : (row : T) => boolean = () => false;
 
     enableEditing (criteria? : (row : T) => boolean) : DTC <T> {
-        this._editingEnabled = criteria ? criteria : row => true;
+        this._editingEnabled = criteria ? criteria : () => true;
         return this;
     }
 
     isEditingEnabled (row : T) : boolean {
         return this._editingEnabled (row);
+    }
+
+    protected _cellValueChangedHandler : 
+        (row : T, value : string, isReseted : boolean) => string 
+        = (row, value, isr) => this.getValue (row);
+
+    setValueChangedHandler (
+        handler : (row : T, value : string, isReseted : boolean) => string
+    ) : DTC <T> {
+        this._cellValueChangedHandler = handler ? handler 
+            : (row, value, isr) => this.getValue (row);
+        return this;
+    }
+
+    getValueChangedHandler () : (row : T, value : string, isReseted : boolean) => string {
+        return this._cellValueChangedHandler;
     }
 
     protected _cellClickHandler : CCHT <T>;
@@ -306,14 +341,89 @@ export class DataTableColumn <T> {
 
 }
 
-export type CCE <T> = CellClickEvent <T>;
+export class TableEditorState <T> {
 
-export class CellClickEvent <T> {
+    protected _input : HTMLInputElement;
+    protected _value : HTMLSpanElement;
+
+    protected _column : DTC <T>;
+    protected _row : T;
+
+    protected _isActive : boolean = false;
 
     constructor (
-        private event : MouseEvent,
-        public readonly row : T,
-        public readonly column : DTC <T>
+        protected table : DataTable <T>
     ) {}
+
+    public changeFocus (value : HTMLSpanElement, input : HTMLInputElement,
+            row : T, column : DTC <T>) {        
+        if (this._value || this._input) {
+            this.resetCurrentState ();
+        }
+
+        if (!value || !input) { return; }
+
+        this._column = column;
+        this._value = value;
+        this._input = input;
+        this._row = row;
+        this.activateCurrentState ();
+    }
+
+    private activateCurrentState () : void {
+        this._input.value = this._value.innerHTML;
+        $(this._input).show ();
+        this._input.focus ();
+
+        $(this._value).hide ();
+        this._isActive = true;
+
+        const editor : TableEditorState <T> = this;
+        this._input.onchange = function (event) {
+            editor.resetCurrentState (false);
+        }
+    }
+
+    private resetCurrentState (isReset : boolean = true) : void {
+        if (!this._isActive) { return; } // cell is disabled
+        let handler = this._column.getValueChangedHandler ();
+        this._isActive = false;
+
+        let value = this._input.value;
+        this._value.innerHTML = handler (this._row, value, isReset);
+        this._input.value = null;
+
+        $(this._value).show ();
+        $(this._input).hide ();
+    }
+
+}
+
+export type RCE <T> = RowClickEvent <T>;
+
+export class RowClickEvent <T> {
+
+    constructor (
+        protected event : MouseEvent,
+        public readonly row : T
+    ) {}
+
+    public getTarget <T extends HTMLElement> () : T {
+        return this.event.target as T;
+    }
+
+}
+
+export type CCE <T> = CellClickEvent <T>;
+
+export class CellClickEvent <T> extends RowClickEvent <T> {
+
+    constructor (
+        event : MouseEvent,
+        row : T,
+        public readonly column : DTC <T>
+    ) {
+        super (event, row);
+    }
 
 }

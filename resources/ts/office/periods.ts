@@ -16,7 +16,8 @@ window.onload = function () {
         columns.push (new DataTableColumn ("author").setTitle ("Author")
             .enableFilter ().setValue (() => 23).setFormatter (v => "" + (v as number) * 2));
         columns.push (new DataTableColumn ("issued").setTitle ("Issued"));
-        columns.push (new DataTableColumn ("priority").setTitle ("").enableEditing ());
+        columns.push (new DataTableColumn ("priority").setTitle ("")
+            .enableEditing ().setValueChangedHandler ((row, value, isr) => value));
         return columns;
     });
 
