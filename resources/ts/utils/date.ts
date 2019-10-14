@@ -30,4 +30,8 @@ export class DateUtils {
         return dateS + " " + timeS;
     }
 
+    public static compareDates (a : Date, b : Date) : number {
+        return a.getTime () - b.getTime ();
+    }
+
 }

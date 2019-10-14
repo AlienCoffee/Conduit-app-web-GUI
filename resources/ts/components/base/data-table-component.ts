@@ -1,4 +1,5 @@
 import { element, clearChildren } from "../../common";
+import { EnumType, Enum } from "../../../lib/jenum";
 
 // Columns generator function type
 type CGFT <T> = (table : DataTable <T>) => DTC <T> [];
@@ -149,7 +150,7 @@ export class DataTable <T> {
                 this.filtersRow.appendChild (thF);
             }
     
-            for (let column of (this.columns ? this.columns : [])) {
+            for (const column of (this.columns ? this.columns : [])) {
                 let thH = document.createElement ("th");
                 thH.classList.add ("vertical-align-middle");
                 if (column.isSortingEnabled ()) {
@@ -159,7 +160,10 @@ export class DataTable <T> {
 
                     let button = document.createElement ("button");
                     button.classList.add ("btn", "btn-sm", "btn-none", "ml-1", "px-0");
-                    button.innerHTML = "<i class=\"fas fa-sort\" aria-hidden=\"true\"></i>";
+                    button.onclick = () => this.updateSortingStates (column);
+                    column.setSortingButton (button);
+                    column.resetSortingState ();
+
                     thH.appendChild (button);
                 } else {
                     thH.innerHTML = column.getTitle ();
@@ -190,10 +194,7 @@ export class DataTable <T> {
 
         clearChildren (this.bodyTag);
 
-        rows_loop:
-        for (const row of (this.data ? this.data : [])) {
-            // testing row for filters conditions
-
+        let displayRows = (this.data ? this.data : []).filter (row => {
             if (this.rowFilteringEnabled) {
                 for (const column of (this.columns ? this.columns : [])) {
                     let input = column.getFilterInput ();
@@ -205,13 +206,15 @@ export class DataTable <T> {
                     let regexp = new RegExp (input.value);
                     let value = column.getValue (row);
                     if (!regexp.test (value)) { 
-                        continue rows_loop; 
+                        return false;
                     }
                 }
             }
 
-            // rendering row
+            return true;
+        });
 
+        for (const row of displayRows) {
             const tr = document.createElement ("tr");
             this.bodyTag.appendChild (tr);
 
@@ -239,7 +242,6 @@ export class DataTable <T> {
                     let input = document.createElement ("input");
                     input.classList.add ("form-control-plaintext", "form-control-sm", 
                         "p-absolute", "t-0", "l-0", "px-1");
-                    //input.placeholder = "...";
                     td.appendChild (input);
                     $(input).hide ();
                 } else {
@@ -258,6 +260,16 @@ export class DataTable <T> {
             $(this.filtersRow).hide ();
         }
 
+        this.refreshTable ();
+    }
+
+    private updateSortingStates (column : DTC <T>) {
+        for (const col of this.columns) { // reset sortings in other columns
+            if (col.getColumnId () == column.getColumnId ()) { continue; }
+            col.resetSortingState ();
+        }
+
+        column.nextSortingState ();
         this.refreshTable ();
     }
 
@@ -415,6 +427,8 @@ export class DataTableColumn <T> {
         return this._cellClickHandler;
     }
 
+    protected _sortingState : SortingState = SortingState.NO;
+    protected _sortingButton : HTMLButtonElement;
     protected _sortingEnabled = false;
 
     enableSorting () : DTC <T> {
@@ -422,8 +436,29 @@ export class DataTableColumn <T> {
         return this;
     }
 
+    setSortingButton (button : HTMLButtonElement) : DTC <T> {
+        this._sortingButton = button;
+        return this;
+    }
+
     isSortingEnabled () : boolean {
         return this._sortingEnabled;
+    }
+
+    nextSortingState () {
+        let index = (this._sortingState.ordinal + 1) % SortingState.length;
+        this._sortingState = SortingState.values [index];
+        this._updateSortingButton ();
+    }
+
+    resetSortingState () {
+        this._sortingState = SortingState.NO;
+        this._updateSortingButton ();
+    }
+
+    private _updateSortingButton () {
+        this._sortingButton.innerHTML = "<i class=\"" + this._sortingState.icon
+            + "\" aria-hidden=\"true\"></i>";
     }
 
 }
@@ -513,4 +548,15 @@ export class CellClickEvent <T> extends RowClickEvent <T> {
         super (event, row);
     }
 
+}
+
+@Enum <SortingState> ()
+export class SortingState extends EnumType <SortingState> () {
+    public static readonly NO   = new SortingState (0, "fas fa-sort");
+    public static readonly DESC = new SortingState (1, "fas fa-sort-up");
+    public static readonly ASC  = new SortingState (2, "fas fa-sort-down");
+
+    constructor (readonly ordinal : number, readonly icon : string) {
+        super ();
+    }
 }

@@ -27,10 +27,6 @@ export function assignType <T> (obj : T, type : any) : T {
     return obj ? Object.setPrototypeOf (obj, type) : obj;
 }
 
-export function compareDates (a : Date, b : Date) : number {
-    return a.getTime () - b.getTime ();
-}
-
 export class Pair <F, S> {
     public F : F; public S : S;
 }
