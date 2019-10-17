@@ -214,6 +214,26 @@ export class DataTable <T> {
             return true;
         });
 
+        let sortingColumn = (this.columns ? this.columns : []).find (column => {
+            return column.isSortingEnabled () 
+                && column.getSortingState () != SortingState.NO;
+        });
+
+        if (sortingColumn) {
+            let modifier = sortingColumn.getSortingState () == SortingState.ASC
+                         ? 1 /* to ascend */ : -1 /* to descend */;
+            let comparator = sortingColumn.getSortingComparator ();
+            displayRows = displayRows.sort ((rowA, rowB) => {
+                if (comparator) {
+                    return modifier * comparator (rowA, rowB);
+                } else {
+                    let valueA = sortingColumn.getValue (rowA);
+                    let valueB = sortingColumn.getValue (rowB);
+                    return modifier * valueA.localeCompare (valueB);
+                }
+            });
+        }
+
         for (const row of displayRows) {
             const tr = document.createElement ("tr");
             this.bodyTag.appendChild (tr);
@@ -428,6 +448,7 @@ export class DataTableColumn <T> {
     }
 
     protected _sortingState : SortingState = SortingState.NO;
+    protected _sortingComparator : (a : T, b : T) => number;
     protected _sortingButton : HTMLButtonElement;
     protected _sortingEnabled = false;
 
@@ -441,17 +462,35 @@ export class DataTableColumn <T> {
         return this;
     }
 
+    setSortingComparator (comparator : (a : T, b : T) => number) : DTC <T> {
+        this._sortingComparator = comparator;
+        return this;
+    }
+
     isSortingEnabled () : boolean {
         return this._sortingEnabled;
     }
 
+    getSortingState () : SortingState {
+        return this._sortingState;
+    }
+
+    getSortingComparator () : (a : T, b : T) => number {
+        return this._sortingComparator;
+    }
+
     nextSortingState () {
-        let index = (this._sortingState.ordinal + 1) % SortingState.length;
-        this._sortingState = SortingState.values [index];
+        if (!this.isSortingEnabled ())  { return; }
+
+        let states = SortingState.values ();
+        let index = (this._sortingState.ordinal + 1) % states.length;
+        this._sortingState = states [index];
         this._updateSortingButton ();
     }
 
     resetSortingState () {
+        if (!this.isSortingEnabled ())  { return; }
+
         this._sortingState = SortingState.NO;
         this._updateSortingButton ();
     }
