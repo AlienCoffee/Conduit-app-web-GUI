@@ -1,6 +1,6 @@
 import { BlogPost, ResponseBox } from "../bridge/gen-dtos";
 import { GetController } from "../bridge/gen-apis";
-import { compareDates, element } from "../common";
+import { element } from "../common";
 import { makeBlogPostElement } from "../bridge/gen-htmls";
 import { DateUtils } from "../utils/date";
 import { LoadingWallComponent } from "./base/loading-wall-component";
@@ -61,7 +61,7 @@ export class NewsWall extends LoadingWallComponent <BlogPost []> {
         super.mergeData (receivedPosts, force);
 
         this.data = this.data.sort ((a, b) => 
-            -compareDates (a.published, b.published)
+            -DateUtils.compareDates (a.published, b.published)
         );
     }
 

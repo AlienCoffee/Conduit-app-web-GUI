@@ -37,7 +37,7 @@
                                 <h4>Periods</h4>
             
                                 <div class="spinner-grow text-primary ml-2" 
-                                    id="periods-wall-spinner">
+                                    id="periods-table-spinner">
                                 </div>
                             </div>
 

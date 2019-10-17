@@ -12,7 +12,7 @@ export abstract class LoadingWallComponent <T> extends LoadingComponent <T> {
         protected componentName  : string,
         protected updateInterval : number = null,
     ) {
-        super ();
+        super (updateInterval);
     }
 
     public init () : LoadingWallComponent <T> {

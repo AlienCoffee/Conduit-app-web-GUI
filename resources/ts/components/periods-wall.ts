@@ -1,6 +1,6 @@
 import { ResponseBox, PeriodEntity, PeriodStatus } from "../bridge/gen-dtos";
 import { GetController } from "../bridge/gen-apis";
-import { compareDates, element } from "../common";
+import { element } from "../common";
 import { makePeriodListElement } from "../bridge/gen-htmls";
 import { DateUtils } from "../utils/date";
 import { WarningPopupTile } from "../popup";
@@ -45,13 +45,13 @@ export class PeriodsWall extends LoadingWallComponent <PeriodEntity []> {
 
         let now = new Date ();
         this.data.forEach (ent => ent.started = 
-            compareDates (now, ent.since) >= 0
+            DateUtils.compareDates (now, ent.since) >= 0
         );
 
         this.data = this.data.sort ((a, b) => {
             if (a.started) {
                 if (b.started) {
-                    return compareDates (a.since, b.since);
+                    return DateUtils.compareDates (a.since, b.since);
                 } else {
                     return -1; // a < b, a should be higher
                 }
@@ -59,7 +59,7 @@ export class PeriodsWall extends LoadingWallComponent <PeriodEntity []> {
                 if (b.started) {
                     return 1; // b < a, b should be higher
                 } else {
-                    return compareDates (a.issued, b.issued);
+                    return DateUtils.compareDates (a.issued, b.issued);
                 }
             }
         });

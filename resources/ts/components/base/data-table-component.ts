@@ -1,4 +1,5 @@
 import { element, clearChildren } from "../../common";
+import { EnumType, Enum } from "../../../lib/jenum";
 
 // Columns generator function type
 type CGFT <T> = (table : DataTable <T>) => DTC <T> [];
@@ -14,6 +15,7 @@ export class DataTable <T> {
     protected bodyTag : HTMLTableSectionElement;
     
     protected cellEditEnableButton : HTMLButtonElement;
+    protected sortingEnableButton : HTMLButtonElement;
     protected filterEnableButton : HTMLButtonElement;
     protected filtersRow : HTMLTableRowElement;
 
@@ -24,8 +26,11 @@ export class DataTable <T> {
     protected rowSelectionEnabled = false;
     protected rowFilteringEnabled = false;
     protected cellEditingEnabled = false;
+    protected rowSortingEnabled = false;
 
     protected editor : TableEditorState <T>;
+
+    protected rowClickHandler : (event : RCE <T>) => void;
 
     constructor (
         protected htmlID : string
@@ -52,31 +57,29 @@ export class DataTable <T> {
         settings.classList.add ("d-flex", "flex-column", "ml-2");
         this.baseDiv.appendChild (settings);
 
-        this.filterEnableButton = document.createElement ("button");
-        this.filterEnableButton.innerHTML = 
-            "<i class=\"fas fa-filter\" aria-hidden=\"true\"></i>";
-        this.filterEnableButton.classList.add ("btn", "btn-sm", "mb-2");
-        settings.appendChild (this.filterEnableButton);
-
-        this.filterEnableButton.onclick = event => {
+        this.filterEnableButton = this.generateTableControlButton (
+                "fas fa-filter", settings, event => {
             event.preventDefault ();
 
             this.rowFilteringEnabled = !this.rowFilteringEnabled;
             this.toggleFilters ();
-        };
+        });
 
-        let sortButton = document.createElement ("button");
-        sortButton.innerHTML = "<i class=\"fas fa-sort\" aria-hidden=\"true\"></i>";
-        sortButton.classList.add ("btn", "btn-sm", "mb-2");
-        settings.appendChild (sortButton);
+        this.sortingEnableButton = this.generateTableControlButton (
+                "fas fa-sort", settings, event => {
+            event.preventDefault ();
 
-        this.cellEditEnableButton = document.createElement ("button");
-        this.cellEditEnableButton.innerHTML = 
-            "<i class=\"fas fa-pen\" aria-hidden=\"true\"></i>";
-        this.cellEditEnableButton.classList.add ("btn", "btn-sm", "mb-2");
-        settings.appendChild (this.cellEditEnableButton);
+            this.rowSortingEnabled = !this.rowSortingEnabled;
+            if (this.rowSortingEnabled) {
+                this.sortingEnableButton.classList.add ("btn-secondary");
+            } else {
+                this.sortingEnableButton.classList.remove ("btn-secondary");
+                this.editor.changeFocus (null, null, null, null);
+            }
+        });
 
-        this.cellEditEnableButton.onclick = event => {
+        this.cellEditEnableButton = this.generateTableControlButton (
+                "fas fa-pen", settings, event => {
             event.preventDefault ();
 
             this.cellEditingEnabled = !this.cellEditingEnabled;
@@ -86,7 +89,18 @@ export class DataTable <T> {
                 this.cellEditEnableButton.classList.remove ("btn-secondary");
                 this.editor.changeFocus (null, null, null, null);
             }
-        };
+        });
+    }
+
+    private generateTableControlButton (icon : string, settingsColumn : HTMLDivElement,
+            listener : (event : MouseEvent) => void) {
+        let button = document.createElement ("button");
+        button.innerHTML = "<i class=\"" + icon + "\" aria-hidden=\"true\"></i>";
+        button.classList.add ("btn", "btn-sm", "mb-2");
+        settingsColumn.appendChild (button);
+        button.onclick = listener;
+
+        return button;
     }
 
     public setColumnsGenerator (generator : CGFT <T>) : DataTable <T> {
@@ -110,46 +124,117 @@ export class DataTable <T> {
         return this;
     }
 
-    public refreshTable () {
-        clearChildren (this.headersTag);
-        clearChildren (this.bodyTag);
+    public setRowClickHandler (handler : (event : RCE <T>) => void) : DataTable <T> {
+        this.rowClickHandler = handler;
+        return this;
+    }
 
+    public refreshTable (full : boolean = false) {
         // header part
 
-        let titles = document.createElement ("tr");
-        this.headersTag.appendChild (titles);
+        if (this.headersTag.children.length == 0 || full) {
+            clearChildren (this.headersTag);
 
-        this.filtersRow = document.createElement ("tr");
-        this.headersTag.appendChild (this.filtersRow);
-        this.toggleFilters ();
+            let titles = document.createElement ("tr");
+            this.headersTag.appendChild (titles);
+    
+            this.filtersRow = document.createElement ("tr");
+            this.headersTag.appendChild (this.filtersRow);
+            this.toggleFilters ();
+    
+            if (this.rowSelectionEnabled) {
+                let thH = document.createElement ("th");
+                titles.appendChild (thH);
+    
+                let thF = document.createElement ("th");
+                this.filtersRow.appendChild (thF);
+            }
+    
+            for (const column of (this.columns ? this.columns : [])) {
+                let thH = document.createElement ("th");
+                thH.classList.add ("vertical-align-middle");
+                if (column.isSortingEnabled ()) {
+                    let title = document.createElement ("span");
+                    title.innerHTML = column.getTitle ();
+                    thH.appendChild (title);
 
-        if (this.rowSelectionEnabled) {
-            let thH = document.createElement ("th");
-            titles.appendChild (thH);
+                    let button = document.createElement ("button");
+                    button.classList.add ("btn", "btn-sm", "btn-none", "ml-1", "px-0");
+                    button.onclick = () => this.updateSortingStates (column);
+                    column.setSortingButton (button);
+                    column.resetSortingState ();
 
-            let thF = document.createElement ("th");
-            this.filtersRow.appendChild (thF);
-        }
+                    thH.appendChild (button);
+                } else {
+                    thH.innerHTML = column.getTitle ();
+                }
+                titles.appendChild (thH);
+    
+                let thF = document.createElement ("th");
+                this.filtersRow.appendChild (thF);
+                if (column.isFilterEnabled ()) {
+                    let input = document.createElement ("input");
+                    let currentInput = column.getFilterInput ();
 
-        for (let column of (this.columns ? this.columns : [])) {
-            let thH = document.createElement ("th");
-            thH.innerHTML = column.getTitle ();
-            titles.appendChild (thH);
-
-            let thF = document.createElement ("th");
-            this.filtersRow.appendChild (thF);
-            if (column.isFilterEnabled ()) {
-                let input = document.createElement ("input");
-                input.classList.add ("form-control-plaintext", 
-                    "form-control-sm", "px-1");
-                input.placeholder = column.getPlaceholder ();
-                thF.appendChild (input);
+                    input.classList.add ("form-control-plaintext", 
+                        "form-control-sm", "px-1");
+                    input.placeholder = column.getPlaceholder ();
+                    column.setFilterInput (input);
+                    thF.appendChild (input);
+                    if (currentInput) {
+                        input.value = currentInput.value;
+                    }
+    
+                    input.onchange = () => this.refreshTable ();
+                }
             }
         }
 
         // body part
 
-        for (const row of (this.data ? this.data : [])) {
+        clearChildren (this.bodyTag);
+
+        let displayRows = (this.data ? this.data : []).filter (row => {
+            if (this.rowFilteringEnabled) {
+                for (const column of (this.columns ? this.columns : [])) {
+                    let input = column.getFilterInput ();
+                    if (!column.isFilterEnabled () || !input 
+                            || input.value.length == 0) { 
+                        continue; 
+                    }
+
+                    let regexp = new RegExp (input.value);
+                    let value = column.getValue (row);
+                    if (!regexp.test (value)) { 
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        });
+
+        let sortingColumn = (this.columns ? this.columns : []).find (column => {
+            return column.isSortingEnabled () 
+                && column.getSortingState () != SortingState.NO;
+        });
+
+        if (sortingColumn) {
+            let modifier = sortingColumn.getSortingState () == SortingState.ASC
+                         ? 1 /* to ascend */ : -1 /* to descend */;
+            let comparator = sortingColumn.getSortingComparator ();
+            displayRows = displayRows.sort ((rowA, rowB) => {
+                if (comparator) {
+                    return modifier * comparator (rowA, rowB);
+                } else {
+                    let valueA = sortingColumn.getValue (rowA);
+                    let valueB = sortingColumn.getValue (rowB);
+                    return modifier * valueA.localeCompare (valueB);
+                }
+            });
+        }
+
+        for (const row of displayRows) {
             const tr = document.createElement ("tr");
             this.bodyTag.appendChild (tr);
 
@@ -177,7 +262,6 @@ export class DataTable <T> {
                     let input = document.createElement ("input");
                     input.classList.add ("form-control-plaintext", "form-control-sm", 
                         "p-absolute", "t-0", "l-0", "px-1");
-                    //input.placeholder = "...";
                     td.appendChild (input);
                     $(input).hide ();
                 } else {
@@ -195,11 +279,25 @@ export class DataTable <T> {
             this.filterEnableButton.classList.remove ("btn-secondary");
             $(this.filtersRow).hide ();
         }
+
+        this.refreshTable ();
+    }
+
+    private updateSortingStates (column : DTC <T>) {
+        for (const col of this.columns) { // reset sortings in other columns
+            if (col.getColumnId () == column.getColumnId ()) { continue; }
+            col.resetSortingState ();
+        }
+
+        column.nextSortingState ();
+        this.refreshTable ();
     }
 
     private rowClicked (event : MouseEvent, row : T) {
         let wrapper = new RowClickEvent (event, row);
-        console.log (wrapper);
+        if (this.rowClickHandler) {
+            this.rowClickHandler (wrapper);
+        }
     }
 
     private cellClicked (event : MouseEvent, row : T, column : DTC <T>) {
@@ -257,6 +355,7 @@ export class DataTableColumn <T> {
         return this._title;
     }
 
+    protected _filterInput : HTMLInputElement = null;
     protected _placeholder : string = null;
     protected _filterEnabled = false;
 
@@ -278,6 +377,15 @@ export class DataTableColumn <T> {
             return this._columnId + " filter";
         }
         return this._placeholder;
+    }
+
+    setFilterInput (input : HTMLInputElement) : DTC <T> {
+        this._filterInput = input;
+        return this;
+    } 
+
+    getFilterInput () : HTMLInputElement {
+        return this._filterInput;
     }
 
     protected _valueFormatter : (value : string | number) => string;
@@ -337,6 +445,59 @@ export class DataTableColumn <T> {
 
     getClickHandler () : CCHT <T> {
         return this._cellClickHandler;
+    }
+
+    protected _sortingState : SortingState = SortingState.NO;
+    protected _sortingComparator : (a : T, b : T) => number;
+    protected _sortingButton : HTMLButtonElement;
+    protected _sortingEnabled = false;
+
+    enableSorting () : DTC <T> {
+        this._sortingEnabled = true;
+        return this;
+    }
+
+    setSortingButton (button : HTMLButtonElement) : DTC <T> {
+        this._sortingButton = button;
+        return this;
+    }
+
+    setSortingComparator (comparator : (a : T, b : T) => number) : DTC <T> {
+        this._sortingComparator = comparator;
+        return this;
+    }
+
+    isSortingEnabled () : boolean {
+        return this._sortingEnabled;
+    }
+
+    getSortingState () : SortingState {
+        return this._sortingState;
+    }
+
+    getSortingComparator () : (a : T, b : T) => number {
+        return this._sortingComparator;
+    }
+
+    nextSortingState () {
+        if (!this.isSortingEnabled ())  { return; }
+
+        let states = SortingState.values ();
+        let index = (this._sortingState.ordinal + 1) % states.length;
+        this._sortingState = states [index];
+        this._updateSortingButton ();
+    }
+
+    resetSortingState () {
+        if (!this.isSortingEnabled ())  { return; }
+
+        this._sortingState = SortingState.NO;
+        this._updateSortingButton ();
+    }
+
+    private _updateSortingButton () {
+        this._sortingButton.innerHTML = "<i class=\"" + this._sortingState.icon
+            + "\" aria-hidden=\"true\"></i>";
     }
 
 }
@@ -426,4 +587,15 @@ export class CellClickEvent <T> extends RowClickEvent <T> {
         super (event, row);
     }
 
+}
+
+@Enum <SortingState> ()
+export class SortingState extends EnumType <SortingState> () {
+    public static readonly NO   = new SortingState (0, "fas fa-sort");
+    public static readonly DESC = new SortingState (1, "fas fa-sort-up");
+    public static readonly ASC  = new SortingState (2, "fas fa-sort-down");
+
+    constructor (readonly ordinal : number, readonly icon : string) {
+        super ();
+    }
 }
