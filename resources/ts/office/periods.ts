@@ -1,8 +1,13 @@
 import { DataTable, DTC, DataTableColumn } from "../components/base/data-table-component"
+import { PeriodTableComponent } from "../components/periods-table";
+import { PeriodEntity } from "../bridge/gen-dtos";
 
+export let pt : PeriodTableComponent;
 export let table : DataTable <any>;
 
 window.onload = function () {
+    pt = new PeriodTableComponent ("periods").init ();
+
     table = new DataTable <any> ("periods-table");
     table.enableSelection ();
 

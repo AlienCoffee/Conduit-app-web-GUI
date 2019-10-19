@@ -19,6 +19,8 @@ export abstract class LoadingTableComponent <T> extends LoadingComponent <T> {
     public init () : AbstractComponent {
         this.spinner = element (this.componentName + "-table-spinner");
         this.table = new DataTable (this.componentName + "-table");
+        this.reloadData ();
+        
         return this;
     }
 
