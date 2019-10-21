@@ -8,6 +8,7 @@ export let table : DataTable <any>;
 window.onload = function () {
     pt = new PeriodTableComponent ("periods").init ();
 
+    /*
     table = new DataTable <any> ("periods-table");
     table.enableSelection ();
 
@@ -31,4 +32,5 @@ window.onload = function () {
 
     table.setData ([{"name" : "hello"}, {"name" : "second row"}, 
         {"name" : "third row"}, {"name" : "fourth row"}], true);
+    */
 }
