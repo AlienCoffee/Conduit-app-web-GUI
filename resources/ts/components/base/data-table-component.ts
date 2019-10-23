@@ -1,5 +1,6 @@
 import { element, clearChildren } from "../../common";
 import { EnumType, Enum } from "../../../lib/jenum";
+import { DateUtils } from "../../utils/date";
 
 // Columns generator function type
 type CGFT <T> = (table : DataTable <T>) => DTC <T> [];
@@ -111,7 +112,7 @@ export class DataTable <T> {
     public setData (data : T [], generateColumns : boolean = false) : DataTable <T> {
         this.data = data;
 
-        if (generateColumns && this.columnsGenerator) {
+        if ((generateColumns || !this.columns) && this.columnsGenerator) {
             this.columns = this.columnsGenerator (this);
         }
 
@@ -598,4 +599,20 @@ export class SortingState extends EnumType <SortingState> () {
     constructor (readonly ordinal : number, readonly icon : string) {
         super ();
     }
+}
+
+@Enum <StandardFormatter> ()
+export class StandardFormatter extends EnumType <StandardFormatter> () {
+    public static readonly DATE = new StandardFormatter ((value : string) => {
+        return DateUtils.format (new Date (value), false);
+    });
+
+    public static readonly DATETIME = new StandardFormatter ((value : string) => {
+        return DateUtils.format (new Date (value), true);
+    });
+
+    constructor (readonly fun : (value : string | number) => string) {
+        super ();
+    }
+
 }

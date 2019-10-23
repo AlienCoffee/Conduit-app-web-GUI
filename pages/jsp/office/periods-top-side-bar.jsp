@@ -6,10 +6,13 @@
 <div class="">
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Management</a>
+            <a class="nav-link ${tab eq 'management' ? 'active' : ''}" href="/office/periods">Management</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Applications</a>
+            <a class="nav-link ${tab eq 'applications' ? 'active' : ''}" href="/office/periods-applications">
+                Applications
+                <span class="badge badge-secondary ml-1">2</span>
+            </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">Statistics</a>

@@ -19,7 +19,27 @@ body {
 }
 
 .w-20px {
-    width: 20px;
+    width: 20px !important;
+}
+
+.w-50px {
+    width: 50px !important;
+}
+
+.w-60px {
+    width: 60px !important;
+}
+
+.w-70px {
+    width: 70px !important;
+}
+
+.min-height-100px {
+    min-height: 100px !important;
+}
+
+.min-height-50px {
+    min-height: 50px !important;
 }
 
 .cursor-pointer {
@@ -56,6 +76,14 @@ body {
 
 .vertical-align-middle {
     vertical-align: middle !important;
+}
+
+.rotate--90 {
+    transform: rotate(-90deg);
+}
+
+.capitalized-text {
+    text-transform: capitalize;
 }
 
 

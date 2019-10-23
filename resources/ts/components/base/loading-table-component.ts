@@ -2,6 +2,7 @@ import { LoadingComponent } from "./loading-component";
 import { AbstractComponent } from "./abstract-component";
 import { element } from "../../common";
 import { DataTable, DTC } from "./data-table-component";
+import { PeriodEditorComponent } from "../period-editor";
 
 export abstract class LoadingTableComponent <T> extends LoadingComponent <T []> {
 
@@ -19,9 +20,11 @@ export abstract class LoadingTableComponent <T> extends LoadingComponent <T []> 
     public init () : AbstractComponent {
         this.spinner = element (this.componentName + "-table-spinner");
         this.table = new DataTable (this.componentName + "-table");
-        this.table.setColumnsGenerator (table => this.generateColumns (table));
+        this.table.setColumnsGenerator (table => 
+            this.generateColumns (table)
+        );
+
         this.reloadData ();
-        
         return this;
     }
 

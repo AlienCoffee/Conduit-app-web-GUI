@@ -1,36 +1,21 @@
 import { DataTable, DTC, DataTableColumn } from "../components/base/data-table-component"
 import { PeriodTableComponent } from "../components/periods-table";
 import { PeriodEntity } from "../bridge/gen-dtos";
+import { PeriodEditorComponent } from "../components/period-editor";
+import { element } from "../common";
 
 export let pt : PeriodTableComponent;
-export let table : DataTable <any>;
+export let pe : PeriodEditorComponent;
+
+let newPeriodButton : HTMLButtonElement;
 
 window.onload = function () {
-    pt = new PeriodTableComponent ("periods").init ();
+    pe = new PeriodEditorComponent ().init ();
+    pt = new PeriodTableComponent ("periods", pe).init ();
 
-    /*
-    table = new DataTable <any> ("periods-table");
-    table.enableSelection ();
-
-    table.setColumnsGenerator (table => {
-        let columns : DTC <any> [] = [];
-        //columns.push (new DataTableColumn ("category").setTitle ("Cat."));
-        columns.push (new DataTableColumn ("name").setTitle ("Name")
-            .enableFilter ("name filter").enableSorting ());
-        columns.push (new DataTableColumn ("status").setTitle ("Status")
-            .enableFilter ().setValue (() => "---"));
-        columns.push (new DataTableColumn ("author").setTitle ("Author")
-            .enableFilter ().setValue (() => 23).setFormatter (v => "" + (v as number) * 2));
-        columns.push (new DataTableColumn ("issued").setTitle ("Issued"));
-        columns.push (new DataTableColumn ("priority").setTitle ("")
-            .enableEditing ().setValueChangedHandler ((row, value, isr) => {
-                row ["priority"] = value;
-                return value;
-            }));
-        return columns;
-    });
-
-    table.setData ([{"name" : "hello"}, {"name" : "second row"}, 
-        {"name" : "third row"}, {"name" : "fourth row"}], true);
-    */
+    newPeriodButton = element ("new-period-button");
+    newPeriodButton.onclick = event => {
+        if (event.button) { return; }
+        pe.openEditorFor (null);
+    };
 }
