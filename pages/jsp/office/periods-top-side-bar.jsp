@@ -8,12 +8,18 @@
         <li class="nav-item">
             <a class="nav-link ${tab eq 'management' ? 'active' : ''}" href="/office/periods">Management</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link ${tab eq 'applications' ? 'active' : ''}" href="/office/periods-applications">
-                Applications
-                <span class="badge badge-secondary ml-1">2</span>
-            </a>
-        </li>
+        <c:if test="${not is_system_period_selected}">
+            <li class="nav-item">
+                <a class="nav-link ${tab eq 'applications' ? 'active' : ''}" href="/office/periods-applications">
+                    Applications
+                    <c:if test="${active_applications > 0}">
+                        <span class="badge badge-secondary ml-1">
+                            ${active_applications}
+                        </span>
+                    </c:if>
+                </a>
+            </li>
+        </c:if>
         <li class="nav-item">
             <a class="nav-link" href="#">Statistics</a>
         </li>

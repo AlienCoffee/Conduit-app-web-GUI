@@ -7,6 +7,7 @@ import { DateUtils } from "../utils/date";
 
 export class PeriodEditorComponent extends LoadingComponent <any> {
 
+    protected cancelButton : HTMLButtonElement;
     protected saveButton : HTMLButtonElement;
     protected spinner : HTMLDivElement;
     protected form : HTMLDivElement;
@@ -24,6 +25,11 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
         this.form.classList.remove ("hidden");
         $(this.form).hide ();
 
+        this.cancelButton = element ("period-editor-cancel");
+        this.cancelButton.onclick = event => {
+            $(this.stub).show (); $(this.form).hide ();
+        };
+
         this.saveButton = element ("period-editor-save");
         this.stub = element ("period-editor-stub");
 
@@ -38,13 +44,20 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
             this.entity.name ? this.entity.name : "";
         inputElement ("period-editor-desc").value = 
             this.entity.description ? this.entity.description : "";
-        for (let child of element ("period-editor-status").children) {
-            let option = child as HTMLOptionElement;
-            if (this.entity.status && option.value == this.entity.status.name) {
-                option.setAttribute ("selected", "");
-            } else {
-                option.removeAttribute ("selected");
+        let statusSelect = element ("period-editor-status");
+        if (this.isNew) { 
+            $ (statusSelect.parentElement.parentElement).hide (); 
+        } else {
+            for (let child of statusSelect.children) {
+                let option = child as HTMLOptionElement;
+                if (this.entity.status && option.value == this.entity.status.name) {
+                    option.setAttribute ("selected", "");
+                } else {
+                    option.removeAttribute ("selected");
+                }
             }
+
+            $ (statusSelect.parentElement.parentElement).show ();
         }
         inputElement ("period-editor-since-date").value = 
             this.entity.since ? DateUtils.formatDateISO (this.entity.since) : "";
@@ -54,10 +67,15 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
             this.entity.until ? DateUtils.formatDateISO (this.entity.until) : "";
         inputElement ("period-editor-until-time").value = 
             this.entity.until ? DateUtils.formatTime (this.entity.until) : "";
-        inputElement ("period-editor-issued-date").value = 
-            this.entity.issued ? DateUtils.formatDateISO (this.entity.issued) : "";
-        inputElement ("period-editor-issued-time").value = 
-            this.entity.issued ? DateUtils.formatTime (this.entity.issued) : "";
+        let issuedDiv = element ("period-editor-issued-date").parentElement.parentElement;
+        if   (this.isNew) { $ (issuedDiv).hide (); } 
+        else {
+            inputElement ("period-editor-issued-date").value = 
+                this.entity.issued ? DateUtils.formatDateISO (this.entity.issued) : "";
+            inputElement ("period-editor-issued-time").value = 
+                this.entity.issued ? DateUtils.formatTime (this.entity.issued) : "";
+            $ (issuedDiv).show ();
+        }
 
         $(this.stub).hide ();
         $(this.form).show ();

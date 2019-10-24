@@ -192,7 +192,8 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end">
-                                    <button class="btn btn-outline-secondary mr-2" id="period-editor-save">
+                                    <button class="btn btn-outline-secondary mr-2" 
+                                            id="period-editor-cancel">
                                         <i class="fas fa-ban mr-1" aria-hidden="true"></i>
                                         Cancel
                                     </button>

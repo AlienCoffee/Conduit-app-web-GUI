@@ -21,7 +21,7 @@ export class PeriodTableComponent extends LoadingTableComponent <PeriodEntity> {
         this.table.setRowClickHandler (event => {
             this.periodEditor.openEditorFor (event.row);
         });
-        
+
         return this; 
     }
 
@@ -29,7 +29,8 @@ export class PeriodTableComponent extends LoadingTableComponent <PeriodEntity> {
         let columns : DTC <PeriodEntity> [] = [];
 
         columns.push (new DataTableColumn <PeriodEntity> ("name").setTitle ("Name"));
-        columns.push (new DataTableColumn <PeriodEntity> ("status").setTitle ("Status"));
+        columns.push (new DataTableColumn <PeriodEntity> ("status").setTitle ("Status")
+            .setValue (row => row.status._name));
         columns.push (new DataTableColumn <PeriodEntity> ("since").setTitle ("Since")
             .setFormatter (StandardFormatter.DATETIME.fun));
 
