@@ -30,3 +30,11 @@ export function assignType <T> (obj : T, type : any) : T {
 export class Pair <F, S> {
     public F : F; public S : S;
 }
+
+export type Function <I, O> = (value : I) => O;
+export type Consumer <T> = Function <T, void>;
+export type Predicate <T> = Function <T, boolean>;
+
+export type BiFunction <I1, I2, O> = (value1 : I1, value2 : I2) => O;
+export type BiConsumer <T1, T2> = BiFunction <T1, T2, void>;
+export type BiPredicate <T1, T2> = BiFunction <T1, T2, boolean>;

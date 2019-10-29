@@ -1,9 +1,10 @@
 import { LoadingComponent } from "./base/loading-component";
 import { AbstractComponent } from "./base/abstract-component";
 import { ResponseBox, PeriodEntity } from "../bridge/gen-dtos";
-import { element, inputElement } from "../common";
+import { element, inputElement, Consumer, BiConsumer } from "../common";
 import { LoadingWallComponent } from "./base/loading-wall-component";
 import { DateUtils } from "../utils/date";
+import { UpdateController, CreateController } from "../bridge/gen-apis";
 
 export class PeriodEditorComponent extends LoadingComponent <any> {
 
@@ -16,6 +17,19 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
     protected isNew : boolean = false;
     protected entity : PeriodEntity;
 
+    protected title : HTMLInputElement;
+    protected description : HTMLInputElement;
+    protected status : HTMLSelectElement;
+    protected sinceDate : HTMLInputElement;
+    protected sinceTime : HTMLInputElement;
+    protected untilDate : HTMLInputElement;
+    protected untilTime : HTMLInputElement;
+    protected issuedDate : HTMLInputElement;
+    protected issuedTime : HTMLInputElement;
+
+    protected subscriptions : Map <string, BiConsumer <PeriodEntity, boolean>> 
+        = new Map ();
+
     public init () : PeriodEditorComponent {
         this.spinner = element ("period-editor-spinner");
         this.spinner.classList.remove ("hidden");
@@ -25,12 +39,24 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
         this.form.classList.remove ("hidden");
         $(this.form).hide ();
 
+        this.title = inputElement ("period-editor-title");
+        this.description = inputElement ("period-editor-desc");
+        this.status = element ("period-editor-status");
+        this.sinceDate = inputElement ("period-editor-since-date");
+        this.sinceTime = inputElement ("period-editor-since-time");
+        this.untilDate = inputElement ("period-editor-until-date");
+        this.untilTime = inputElement ("period-editor-until-time");
+        this.issuedDate = inputElement ("period-editor-issued-date");
+        this.issuedTime = inputElement ("period-editor-issued-time");
+
         this.cancelButton = element ("period-editor-cancel");
         this.cancelButton.onclick = event => {
             $(this.stub).show (); $(this.form).hide ();
         };
 
         this.saveButton = element ("period-editor-save");
+        this.saveButton.onclick = event => this.saveEditorChanges ();
+
         this.stub = element ("period-editor-stub");
 
         return this;
@@ -40,15 +66,12 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
         this.entity = period ? period : new PeriodEntity ();
         this.isNew = period == null;
 
-        inputElement ("period-editor-title").value = 
-            this.entity.name ? this.entity.name : "";
-        inputElement ("period-editor-desc").value = 
-            this.entity.description ? this.entity.description : "";
-        let statusSelect = element ("period-editor-status");
+        this.title.value = this.entity.name ? this.entity.name : "";
+        this.description.value = this.entity.description ? this.entity.description : "";
         if (this.isNew) { 
-            $ (statusSelect.parentElement.parentElement).hide (); 
+            $ (this.status.parentElement.parentElement).hide (); 
         } else {
-            for (let child of statusSelect.children) {
+            for (let child of this.status.children) {
                 let option = child as HTMLOptionElement;
                 if (this.entity.status && option.value == this.entity.status.name) {
                     option.setAttribute ("selected", "");
@@ -57,23 +80,23 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
                 }
             }
 
-            $ (statusSelect.parentElement.parentElement).show ();
+            $ (this.status.parentElement.parentElement).show ();
         }
-        inputElement ("period-editor-since-date").value = 
-            this.entity.since ? DateUtils.formatDateISO (this.entity.since) : "";
-        inputElement ("period-editor-since-time").value = 
-            this.entity.since ? DateUtils.formatTime (this.entity.since) : "";
-        inputElement ("period-editor-until-date").value = // add validation for NAD
-            this.entity.until ? DateUtils.formatDateISO (this.entity.until) : "";
-        inputElement ("period-editor-until-time").value = 
-            this.entity.until ? DateUtils.formatTime (this.entity.until) : "";
+        this.sinceDate.value = this.entity.since 
+            ? DateUtils.formatDateISO (this.entity.since) : "";
+        this.sinceTime.value = this.entity.since 
+            ? DateUtils.formatTime (this.entity.since) : "";
+        this.untilDate.value = this.entity.until 
+            ? DateUtils.formatDateISO (this.entity.until) : "";
+        this.untilTime.value = this.entity.until 
+            ? DateUtils.formatTime (this.entity.until) : "";
         let issuedDiv = element ("period-editor-issued-date").parentElement.parentElement;
         if   (this.isNew) { $ (issuedDiv).hide (); } 
         else {
-            inputElement ("period-editor-issued-date").value = 
-                this.entity.issued ? DateUtils.formatDateISO (this.entity.issued) : "";
-            inputElement ("period-editor-issued-time").value = 
-                this.entity.issued ? DateUtils.formatTime (this.entity.issued) : "";
+            this.issuedDate.value = this.entity.issued 
+                ? DateUtils.formatDateISO (this.entity.issued) : "";
+            this.issuedTime.value = this.entity.issued 
+                ? DateUtils.formatTime (this.entity.issued) : "";
             $ (issuedDiv).show ();
         }
 
@@ -81,16 +104,53 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
         $(this.form).show ();
     }
 
+    private saveEditorChanges () : void {
+        if (!this.isNew) {
+            this.makeRequest ("status");
+        }
+        this.makeRequest ("parameters");
+    }
+
     public makeRequest (descriptor? : string) : Promise <ResponseBox <any>> {
+        if (!this.entity) { return; }
+
+        if (descriptor == "status") {
+            return UpdateController.changePeriodState (
+                this.entity.id, this.status.value
+            );
+        } else if (descriptor == "parameters") {
+            if (this.isNew) {
+                let since = this.sinceDate.value + "T" + this.sinceTime;
+                
+                this.notifyAll (this.entity, this.isNew);
+                return CreateController.createPeriod (
+                    this.title.value, since, 
+                    this.description.value
+                );
+            } else {
+                return null; // TODO
+            }
+        }
+
         return null;
     }
 
     public onRequestFinised (descriptor? : string) : void {
-        //
+        if (this.spinner) { $(this.spinner).hide (); }
     }
 
     public handleResponse (response : ResponseBox <any>, descriptor? : string) : void {
         //
+    }
+
+    public subscribe (key : string, callback : BiConsumer <PeriodEntity, boolean>) : void {
+        this.subscriptions.set (key, callback);
+    }
+
+    private notifyAll (entity : PeriodEntity, isNew : boolean) {
+        for (let callback of this.subscriptions.values ()) {
+            callback (entity, isNew);
+        }
     }
 
 }

@@ -18,6 +18,9 @@ export class PeriodTableComponent extends LoadingTableComponent <PeriodEntity> {
         super.init (); 
 
         this.table.enableSelection ();
+        this.periodEditor.subscribe ("period-table", (period, isNew) => {
+            //
+        });
         this.table.setRowClickHandler (event => {
             this.periodEditor.openEditorFor (event.row);
         });
