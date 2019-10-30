@@ -27,6 +27,18 @@ export function assignType <T> (obj : T, type : any) : T {
     return obj ? Object.setPrototypeOf (obj, type) : obj;
 }
 
+export function clone <T> (object  : T) : T {
+    let copy = new (object.constructor ());
+    for (let property in object) {
+        if (typeof object [property] === "object") {
+            copy [property] = copy (object [property]);
+        } else {
+            copy [property] = object [property];
+        }
+    }
+    return copy;
+}
+
 export class Pair <F, S> {
     public F : F; public S : S;
 }

@@ -25,14 +25,17 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
         }
     }
 
-    public reloadData (descriptor? : string) {
-        this.makeRequest (descriptor).then (res => {
-            this.onRequestFinised (descriptor);
-            this.handleResponse (res, descriptor);
-        }).catch ((rej : NetworkError) => {
-            this.onRequestFinised (descriptor);
-            this.handleError (rej, descriptor);
-        });
+    public reloadData (descriptor? : string) : void {
+        let request = this.makeRequest (descriptor);
+        if (request) {
+            request.then (res => {
+                this.onRequestFinised (descriptor);
+                this.handleResponse (res, descriptor);
+            }, (rej : NetworkError) => {
+                this.onRequestFinised (descriptor);
+                this.handleError (rej, descriptor);
+            });
+        }
     }
 
     protected checkErrorsAndDo <T> (response : ResponseBox <T>, 

@@ -1,7 +1,7 @@
 import { LoadingComponent } from "./base/loading-component";
 import { AbstractComponent } from "./base/abstract-component";
 import { ResponseBox, PeriodEntity } from "../bridge/gen-dtos";
-import { element, inputElement, Consumer, BiConsumer } from "../common";
+import { element, inputElement, Consumer, BiConsumer, clone } from "../common";
 import { LoadingWallComponent } from "./base/loading-wall-component";
 import { DateUtils } from "../utils/date";
 import { UpdateController, CreateController } from "../bridge/gen-apis";
@@ -106,9 +106,9 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
 
     private saveEditorChanges () : void {
         if (!this.isNew) {
-            this.makeRequest ("status");
+            this.reloadData ("status");
         }
-        this.makeRequest ("parameters");
+        this.reloadData ("parameters");
     }
 
     public makeRequest (descriptor? : string) : Promise <ResponseBox <any>> {
@@ -119,13 +119,25 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
                 this.entity.id, this.status.value
             );
         } else if (descriptor == "parameters") {
+            let since = this.sinceDate.value + "T" + this.sinceTime.value;
+            let until = "";
+
+            let entityClone = clone (this.entity);
+            if (this.untilDate.value.length > 0 && this.untilTime.value.length > 0) {
+                until = this.untilDate.value + "T" + this.untilTime.value;
+                entityClone.until = new Date (until);
+            }
+            
+            entityClone.description = this.description.value;
+            entityClone.since = new Date (since);
+            entityClone.name = this.title.value;
+
+            this.notifyAll (entityClone, this.isNew);
             if (this.isNew) {
-                let since = this.sinceDate.value + "T" + this.sinceTime;
-                
-                this.notifyAll (this.entity, this.isNew);
                 return CreateController.createPeriod (
                     this.title.value, since, 
-                    this.description.value
+                    this.description.value,
+                    until.length > 0 ? until : null
                 );
             } else {
                 return null; // TODO
@@ -140,7 +152,9 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
     }
 
     public handleResponse (response : ResponseBox <any>, descriptor? : string) : void {
-        //
+        this.checkErrorsAndDo (response, answer => {
+            //
+        });
     }
 
     public subscribe (key : string, callback : BiConsumer <PeriodEntity, boolean>) : void {
