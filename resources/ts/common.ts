@@ -27,13 +27,17 @@ export function assignType <T> (obj : T, type : any) : T {
     return obj ? Object.setPrototypeOf (obj, type) : obj;
 }
 
-export function clone <T> (object  : T) : T {
-    let copy = new (object.constructor ());
-    for (let property in object) {
-        if (typeof object [property] === "object") {
-            copy [property] = copy (object [property]);
+export function clone <T> (src  : T) : T {
+    let copy = new (src.constructor as any) ();
+    for (let property in src) {
+        if (typeof src [property] === "object" && src [property] != null) {
+            if (src [property] instanceof Date) {
+                copy [property] = new Date (src [property] as unknown as Date);
+            } else {
+                copy [property] = clone (src [property]);
+            }
         } else {
-            copy [property] = object [property];
+            copy [property] = src [property];
         }
     }
     return copy;

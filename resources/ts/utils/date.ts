@@ -12,6 +12,8 @@ export class DateUtils {
     }
 
     public static formatDate (date : Date) {
+        if (isNaN (date.getTime ())) { return ""; }
+
         let value = date.getDate ();
         let day = value < 10 ? "0" + value : "" + value;
 
@@ -25,6 +27,8 @@ export class DateUtils {
     }
 
     public static formatDateISO (date : Date) {
+        if (isNaN (date.getTime ())) { return ""; }
+
         let value = date.getDate ();
         let day = value < 10 ? "0" + value : "" + value;
 
@@ -38,6 +42,8 @@ export class DateUtils {
     }
 
     public static formatTime (date : Date) {
+        if (isNaN (date.getTime ())) { return ""; }
+        
         let value = date.getHours ();
         let hour = value < 10 ? "0" + value : "" + value;
 

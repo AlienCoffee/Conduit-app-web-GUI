@@ -38,6 +38,8 @@ export abstract class LoadingComponent <T> extends AbstractComponent {
         }
     }
 
+    protected getData () : T { return this.data; }
+
     protected checkErrorsAndDo <T> (response : ResponseBox <T>, 
             callback : (content : T) => void) : void {
         if (response && !response.error) {

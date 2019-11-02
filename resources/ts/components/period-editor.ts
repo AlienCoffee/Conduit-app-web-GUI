@@ -1,6 +1,6 @@
 import { LoadingComponent } from "./base/loading-component";
 import { AbstractComponent } from "./base/abstract-component";
-import { ResponseBox, PeriodEntity } from "../bridge/gen-dtos";
+import { ResponseBox, PeriodEntity, PeriodStatus } from "../bridge/gen-dtos";
 import { element, inputElement, Consumer, BiConsumer, clone } from "../common";
 import { LoadingWallComponent } from "./base/loading-wall-component";
 import { DateUtils } from "../utils/date";
@@ -63,7 +63,7 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
     }
 
     public openEditorFor (period : PeriodEntity) : void {
-        this.entity = period ? period : new PeriodEntity ();
+        this.entity = period ? clone (period) : new PeriodEntity ();
         this.isNew = period == null;
 
         this.title.value = this.entity.name ? this.entity.name : "";
@@ -115,6 +115,9 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
         if (!this.entity) { return; }
 
         if (descriptor == "status") {
+            this.entity.status = PeriodStatus.valueByName (this.status.value);
+
+            this.notifyAll (this.entity, false);
             return UpdateController.changePeriodState (
                 this.entity.id, this.status.value
             );
@@ -122,17 +125,16 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
             let since = this.sinceDate.value + "T" + this.sinceTime.value;
             let until = "";
 
-            let entityClone = clone (this.entity);
             if (this.untilDate.value.length > 0 && this.untilTime.value.length > 0) {
                 until = this.untilDate.value + "T" + this.untilTime.value;
-                entityClone.until = new Date (until);
+                this.entity.until = new Date (until);
             }
             
-            entityClone.description = this.description.value;
-            entityClone.since = new Date (since);
-            entityClone.name = this.title.value;
+            this.entity.description = this.description.value;
+            this.entity.since = new Date (since);
+            this.entity.name = this.title.value;
 
-            this.notifyAll (entityClone, this.isNew);
+            this.notifyAll (this.entity, this.isNew);
             if (this.isNew) {
                 return CreateController.createPeriod (
                     this.title.value, since, 
