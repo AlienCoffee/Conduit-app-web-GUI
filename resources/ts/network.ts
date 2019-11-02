@@ -12,7 +12,7 @@ export function sendRequest <T extends ResponseBox <any>> (method : string,
 	var header = metas ["_csrf_header"].getAttribute ("content");
 
     return new Promise <T> ((res, rej) => {
-        var descriptor = new XMLHttpRequest ();
+        let descriptor = new XMLHttpRequest ();
         
         descriptor.onerror = function (pe : ProgressEvent) {
             let error = new NetworkError ("Failed to make request to server", 

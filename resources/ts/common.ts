@@ -27,6 +27,30 @@ export function assignType <T> (obj : T, type : any) : T {
     return obj ? Object.setPrototypeOf (obj, type) : obj;
 }
 
+export function clone <T> (src  : T) : T {
+    let copy = new (src.constructor as any) ();
+    for (let property in src) {
+        if (typeof src [property] === "object" && src [property] != null) {
+            if (src [property] instanceof Date) {
+                copy [property] = new Date (src [property] as unknown as Date);
+            } else {
+                copy [property] = clone (src [property]);
+            }
+        } else {
+            copy [property] = src [property];
+        }
+    }
+    return copy;
+}
+
 export class Pair <F, S> {
     public F : F; public S : S;
 }
+
+export type Function <I, O> = (value : I) => O;
+export type Consumer <T> = Function <T, void>;
+export type Predicate <T> = Function <T, boolean>;
+
+export type BiFunction <I1, I2, O> = (value1 : I1, value2 : I2) => O;
+export type BiConsumer <T1, T2> = BiFunction <T1, T2, void>;
+export type BiPredicate <T1, T2> = BiFunction <T1, T2, boolean>;
