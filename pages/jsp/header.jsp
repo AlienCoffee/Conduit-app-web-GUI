@@ -20,8 +20,9 @@
                         <span class="input-group-text">Period</span>
                     </div>
                     <select class="form-control">
-                        <option>~ system ~</option>
-                        <option>Summer Math Camp 2019</option>
+                        <c:forEach var="period" items="${periods}">
+                            <option>${period.getName ()}</option>
+                        </c:forEach>
                     </select>
                 </div>
                 <button class="btn btn-sm btn-secondary"
