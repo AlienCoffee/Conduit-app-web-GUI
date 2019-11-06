@@ -19,9 +19,11 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">Period</span>
                     </div>
-                    <select class="form-control">
+                    <select id="office-period-selector" class="form-control">
                         <c:forEach var="period" items="${periods}">
-                            <option>${period.getName ()}</option>
+                            <option value="${period.getId ()}">
+                                ${period.getName ()}
+                            </option>
                         </c:forEach>
                     </select>
                 </div>
