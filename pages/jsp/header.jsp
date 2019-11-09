@@ -21,7 +21,9 @@
                     </div>
                     <select id="office-period-selector" class="form-control">
                         <c:forEach var="period" items="${periods}">
-                            <option value="${period.getId ()}">
+                            <option ${period.getId () eq current_period.getId () 
+                                        ? "selected" : ""}
+                                    value="${period.getId ()}">
                                 ${period.getName ()}
                             </option>
                         </c:forEach>

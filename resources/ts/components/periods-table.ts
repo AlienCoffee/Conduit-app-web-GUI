@@ -19,16 +19,9 @@ export class PeriodTableComponent extends LoadingTableComponent <PeriodEntity> {
 
         this.table.enableSelection ();
         this.periodEditor.subscribe ("period-table", (period, isNew) => {
-            if (!this.getData ()) { this.data = []; }
-            
-            if (isNew) {
-                this.getData ().push (period);
-            } else {
-                let index = this.getData ().findIndex (ent => ent.id == period.id);
-                this.getData () [index] = period;
-            }
-
-            this.table.setData (this.getData ());
+            this.replaceOrAddPeriod (period, isNew ? null : period);
+        }, (period, original) => {
+            this.replaceOrAddPeriod (period, original);
         });
         this.table.setRowClickHandler (event => {
             this.periodEditor.openEditorFor (event.row);
@@ -58,6 +51,19 @@ export class PeriodTableComponent extends LoadingTableComponent <PeriodEntity> {
         this.checkErrorsAndDo (response, rows => {
             this.table.setData (this.data = rows);
         });
+    }
+
+    private replaceOrAddPeriod (search : PeriodEntity, replace : PeriodEntity) : void {
+        if (!this.getData ()) { this.data = []; }
+            
+        if (replace == null) { // means `add new`
+            this.getData ().push (search);
+        } else {
+            let index = this.getData ().findIndex (ent => ent.id == search.id);
+            this.getData () [index] = replace;
+        }
+
+        this.table.setData (this.getData ());
     }
 
 }

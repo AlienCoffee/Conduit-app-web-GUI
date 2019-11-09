@@ -5,9 +5,11 @@
 
 <div class="">
     <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link ${tab eq 'management' ? 'active' : ''}" href="/office/periods">Management</a>
-        </li>
+        <c:if test="${is_system_period_selected}">
+            <li class="nav-item">
+                <a class="nav-link ${tab eq 'management' ? 'active' : ''}" href="/office/periods">Management</a>
+            </li>
+        </c:if>
         <c:if test="${not is_system_period_selected}">
             <li class="nav-item">
                 <a class="nav-link ${tab eq 'applications' ? 'active' : ''}" href="/office/periods-applications">

@@ -1,7 +1,7 @@
 import { LoadingComponent } from "./base/loading-component";
 import { AbstractComponent } from "./base/abstract-component";
 import { ResponseBox, PeriodEntity, PeriodStatus } from "../bridge/gen-dtos";
-import { element, inputElement, Consumer, BiConsumer, clone } from "../common";
+import { element, inputElement, Consumer, BiConsumer, clone, Pair } from "../common";
 import { LoadingWallComponent } from "./base/loading-wall-component";
 import { DateUtils } from "../utils/date";
 import { UpdateController, CreateController } from "../bridge/gen-apis";
@@ -14,6 +14,7 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
     protected form : HTMLDivElement;
     protected stub : HTMLDivElement;
 
+    protected entityOriginal : PeriodEntity;
     protected isNew : boolean = false;
     protected entity : PeriodEntity;
 
@@ -27,8 +28,13 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
     protected issuedDate : HTMLInputElement;
     protected issuedTime : HTMLInputElement;
 
-    protected subscriptions : Map <string, BiConsumer <PeriodEntity, boolean>> 
-        = new Map ();
+    protected subscriptions : Map <
+            string, 
+            Pair <
+                BiConsumer <PeriodEntity, boolean>, 
+                BiConsumer <PeriodEntity, PeriodEntity>
+            >
+        > = new Map ();
 
     public init () : PeriodEditorComponent {
         this.spinner = element ("period-editor-spinner");
@@ -64,6 +70,7 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
 
     public openEditorFor (period : PeriodEntity) : void {
         this.entity = period ? clone (period) : new PeriodEntity ();
+        this.entityOriginal = this.entity;
         this.isNew = period == null;
 
         this.title.value = this.entity.name ? this.entity.name : "";
@@ -122,6 +129,8 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
                 this.entity.id, this.status.value
             );
         } else if (descriptor == "parameters") {
+            this.saveButton.setAttribute ("disable", "");
+
             let since = this.sinceDate.value + "T" + this.sinceTime.value;
             let until = "";
 
@@ -131,6 +140,9 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
             }
             
             this.entity.description = this.description.value;
+            if (this.isNew) {
+                this.entity.status = PeriodStatus.CREATED;
+            }
             this.entity.since = new Date (since);
             this.entity.name = this.title.value;
 
@@ -151,21 +163,38 @@ export class PeriodEditorComponent extends LoadingComponent <any> {
 
     public onRequestFinised (descriptor? : string) : void {
         if (this.spinner) { $(this.spinner).hide (); }
+
+        if (descriptor == "parameters") {
+            this.saveButton.removeAttribute ("disable");
+        }
     }
 
     public handleResponse (response : ResponseBox <any>, descriptor? : string) : void {
         this.checkErrorsAndDo (response, answer => {
-            //
+            $(this.stub).show (); $(this.form).hide ();
         });
+
+        if (response && response.error) {
+            this.notifyErrorAll (this.entity, this.entityOriginal);
+        }
     }
 
-    public subscribe (key : string, callback : BiConsumer <PeriodEntity, boolean>) : void {
-        this.subscriptions.set (key, callback);
+    public subscribe (key : string, callback : BiConsumer <PeriodEntity, boolean>,
+            errorCallback? : BiConsumer <PeriodEntity, PeriodEntity>) : void {
+        this.subscriptions.set (key, new Pair (callback, errorCallback));
     }
 
     private notifyAll (entity : PeriodEntity, isNew : boolean) {
-        for (let callback of this.subscriptions.values ()) {
-            callback (entity, isNew);
+        for (let callbacks of this.subscriptions.values ()) {
+            callbacks.F (entity, isNew);
+        }
+    }
+
+    private notifyErrorAll (entity : PeriodEntity, entityOriginal : PeriodEntity) {
+        for (let callbacks of this.subscriptions.values ()) {
+            if (!callbacks.S) { continue; }
+            
+            callbacks.S (entity, entityOriginal);
         }
     }
 

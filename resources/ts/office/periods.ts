@@ -14,7 +14,7 @@ let newPeriodButton : HTMLButtonElement;
 window.onload = function () {
     pe = new PeriodEditorComponent ().init ();
     pt = new PeriodTableComponent ("periods", pe).init ();
-    off = new OfficePeriodFollower ().init ();
+    off = new OfficePeriodFollower (pe).init ();
 
     newPeriodButton = element ("new-period-button");
     newPeriodButton.onclick = event => {

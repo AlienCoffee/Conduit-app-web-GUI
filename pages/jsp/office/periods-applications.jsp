@@ -83,6 +83,6 @@
 		
 		<script type="text/javascript" src="/resources/lib/require.2.3.6.js"></script>
 		<script type="text/javascript" src="/resources/js/ui.js"></script>
-		<script>loadContext ("../", ["office/periods"]);</script>
+		<script>loadContext ("../", ["office/periods-applications"]);</script>
     </body>
 </html>

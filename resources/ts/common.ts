@@ -44,7 +44,17 @@ export function clone <T> (src  : T) : T {
 }
 
 export class Pair <F, S> {
+    
     public F : F; public S : S;
+
+    constructor (f? : F, s? : S) {
+        this.F = f; this.S = s;
+    }
+
+    public static of <F, S> (f : F, s : S) : Pair <F, S> {
+        return new Pair (f, s);
+    }
+
 }
 
 export type Function <I, O> = (value : I) => O;
